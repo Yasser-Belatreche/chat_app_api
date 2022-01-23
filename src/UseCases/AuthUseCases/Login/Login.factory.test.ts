@@ -1,44 +1,72 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiAsPromised from "chai-as-promised";
 
 import { makeLogin } from "./Login.factory";
 
+chai.use(chaiAsPromised);
 /**
- * 2 - not able to login when the password doesn't match the phone number
  * 3 - return a token when everything is OK
  */
 
 describe("Login use case", () => {
-  const login = makeLogin({});
+  const realUser = {
+    userId: "myUserId",
+    name: "someName",
+    email: "email@gmail.com",
+    password: "hashedPassword",
+  };
+  const userRepository: any = {
+    getByEmail: (e: string) => Promise.resolve(realUser),
+  };
+  const passwordManager: any = {
+    compareHashWithLiteral: (args: any) => true,
+  };
+  const Token: any = {
+    generateToken: (id: string) => `Bearer mySuperSecretToken`,
+  };
 
-  it("should not be able to login with wrong inputs", () => {
-    const userInfoWithUnvalidName = {
-      name: "Doe",
-      phoneNumber: "+213798989098",
-      password: "12345678",
+  const login = makeLogin({ userRepository, passwordManager, Token });
+
+  it("should not be able to login with invalid inputs", async () => {
+    const userInfoWithUnvalidEmail = {
+      email: "eam",
+      password: "secretPassword",
     };
-
-    const userInfoWithUnvalidPhone = {
-      name: "John Doe",
-      phoneNumber: "s89098",
-      password: "12345678",
-    };
-
     const userInfoWithUnvalidPassword = {
-      name: "John Doe",
-      phoneNumber: "+213798989098",
-      password: "12378",
+      email: "email@email.com",
+      password: "secret",
     };
 
-    expect(() => login(userInfoWithUnvalidName)).to.throw(
-      "name should have more than 4 characters"
+    await expect(login(userInfoWithUnvalidEmail)).to.be.rejectedWith(
+      "unvalid email"
     );
-    expect(() => login(userInfoWithUnvalidPhone)).to.throw(
-      "unvalid phone number"
-    );
-    expect(() => login(userInfoWithUnvalidPassword)).to.throw(
-      "password should have more than 8 characters"
+    await expect(login(userInfoWithUnvalidPassword)).to.be.rejectedWith(
+      "should have more than 8 characters"
     );
   });
 
-  it("should not be able to login when the password does not match the phone number", () => {});
+  it("should not be able to login when the user does not exist", async () => {
+    userRepository.getByEmail = (e: string) => Promise.resolve(undefined);
+
+    await expect(
+      login({ email: "email@noExist.com", password: "wrongPassword" })
+    ).to.be.rejectedWith("no user associated with this email");
+  });
+
+  it("should not be able to login when the password does not match the email", async () => {
+    userRepository.getByEmail = (e: string) => Promise.resolve(realUser);
+    passwordManager.compareHashWithLiteral = (args: any) => false;
+
+    await expect(
+      login({ email: realUser.email, password: "wrongPassword" })
+    ).to.be.rejectedWith("wrong credentials");
+  });
+
+  it("should return a user token when the password match the email", async () => {
+    passwordManager.compareHashWithLiteral = (args: any) => true;
+
+    await expect(
+      login({ email: realUser.email, password: "wrongPassword" })
+    ).to.eventually.include("Bearer ");
+  });
 });

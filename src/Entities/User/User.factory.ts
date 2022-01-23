@@ -4,32 +4,34 @@ interface Dependencies {
   };
 }
 
+interface IUserWithoutId {
+  userId?: string;
+  name?: string;
+  email: string;
+  password: string;
+  isConfirmed?: boolean;
+}
+
+export interface IUser extends IUserWithoutId {
+  userId: string;
+}
+
 const makeUser = ({ ID }: Dependencies) => {
-  interface IUserWithoutId {
-    userId?: string;
-    name: string;
-    phoneNumber: string;
-    password: string;
-  }
-
-  interface IUser extends IUserWithoutId {
-    userId: string;
-  }
-
   return class User implements IUser {
     private _userId: string;
-    private _name: string;
-    private _phoneNumber: string;
+    private _name?: string;
+    private _email: string;
     private _password: string;
+    private _isConfirmed: boolean;
 
     constructor(params: IUserWithoutId) {
-      const { userId, name, phoneNumber, password } = this.formatValues(params);
+      const { userId, name, email, password, isConfirmed } =
+        this.formatValues(params);
 
-      if (!this.isValidName(name))
+      if (name && !this.isValidName(name))
         this.InvalidPropertyError("name should have more than 4 characters");
 
-      if (!this.isValidPhoneNumber(phoneNumber))
-        this.InvalidPropertyError("unvalid phone number");
+      if (!this.isValidEmail(email)) this.InvalidPropertyError("unvalid email");
 
       if (!this.isValidPassword(password))
         this.InvalidPropertyError(
@@ -38,31 +40,49 @@ const makeUser = ({ ID }: Dependencies) => {
 
       this._userId = userId || ID.generateRandomId();
       this._name = name;
-      this._phoneNumber = phoneNumber;
+      this._email = email;
       this._password = password;
+      this._isConfirmed = Boolean(isConfirmed);
     }
 
     public get userId(): string {
       return this._userId;
     }
 
-    public get name(): string {
+    public get name(): string | undefined {
       return this._name;
     }
 
-    public get phoneNumber(): string {
-      return this._phoneNumber;
+    public get email(): string {
+      return this._email;
     }
 
     public get password(): string {
       return this._password;
     }
 
+    public set password(v: string) {
+      if (!this.isValidPassword(v))
+        this.InvalidPropertyError(
+          "password should have more than 8 characters"
+        );
+
+      this._password = v;
+    }
+
+    public get isConfirmed(): boolean {
+      return this._isConfirmed;
+    }
+
+    public set isConfirmed(confirmed: boolean) {
+      this._isConfirmed = confirmed;
+    }
+
     private formatValues(values: IUserWithoutId): IUserWithoutId {
       return {
-        userId: values.userId,
-        name: values.name.trim().toLowerCase(),
-        phoneNumber: values.phoneNumber.trim(),
+        ...values,
+        name: values.name?.trim().toLowerCase(),
+        email: values.email.trim().toLocaleLowerCase(),
         password: values.password.trim(),
       };
     }
@@ -71,12 +91,12 @@ const makeUser = ({ ID }: Dependencies) => {
       return name.length >= 4;
     }
 
-    private isValidPhoneNumber(number: string): boolean {
-      return !!number.match(PHONE_NUM_PATTERN);
+    private isValidEmail(e: string): boolean {
+      return !!e.match(EMAIL_PATTERN);
     }
 
-    private isValidPassword(password: string): boolean {
-      return password.length >= 8;
+    private isValidPassword(pass: string): boolean {
+      return pass.length >= 8;
     }
 
     private InvalidPropertyError(message: string): never {
@@ -85,7 +105,7 @@ const makeUser = ({ ID }: Dependencies) => {
   };
 };
 
-const PHONE_NUM_PATTERN =
-  /((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))/g;
+const EMAIL_PATTERN =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export { makeUser };
