@@ -40,7 +40,7 @@ describe("Login use case", () => {
 
     await expect(
       login({ email: "email@noExist.com", password: "wrongPassword" })
-    ).to.be.rejectedWith("no user associated with this email");
+    ).to.be.rejectedWith("user does not exist");
   });
 
   it("should not be able to login when the password does not match the email", async () => {
@@ -49,7 +49,7 @@ describe("Login use case", () => {
 
     await expect(
       login({ email: user.email, password: "wrongPassword" })
-    ).to.be.rejectedWith("wrong credentials");
+    ).to.be.rejectedWith("wrong password");
   });
 
   it("should return a user token when the password match the email", async () => {

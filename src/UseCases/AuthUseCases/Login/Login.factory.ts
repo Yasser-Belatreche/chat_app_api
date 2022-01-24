@@ -1,13 +1,13 @@
 import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
 import type { Token } from "../../../Ports/DrivenPorts/Token";
+import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
 
 import { User } from "../../../Entities/User/User";
+import { errorMessages } from "../../../utils/ErrorMessages";
 
 interface Dependencies {
   userRepository: UserRepository;
-  passwordManager: {
-    compareHashWithLiteral: (arg: { hash: string; literal: string }) => boolean;
-  };
+  passwordManager: PasswordManager;
   token: Token;
 }
 
@@ -25,13 +25,13 @@ const makeLogin = ({
     const user = new User(args);
     const realUser = await userRepository.getByEmail(user.email);
 
-    if (!realUser) throw new Error("no user associated with this email");
+    if (!realUser) throw new Error(errorMessages.USER_NOT_EXIST);
 
     const isMatch = passwordManager.compareHashWithLiteral({
       hash: realUser.password,
       literal: user.password,
     });
-    if (!isMatch) throw new Error("wrong credentials");
+    if (!isMatch) throw new Error(errorMessages.WRONG_PASSWORD);
 
     const userToken = token.generateToken(realUser.userId);
 

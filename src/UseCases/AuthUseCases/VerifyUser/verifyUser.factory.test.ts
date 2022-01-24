@@ -33,7 +33,7 @@ describe("VerifyUser use case", () => {
     const verificationArgs = { email: user.email, verificationCode: 1234 };
 
     await expect(verifyUser(verificationArgs)).to.be.rejectedWith(
-      "no confirmation code for this user"
+      "no verification code for this user"
     );
   });
 

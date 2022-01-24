@@ -4,6 +4,7 @@ import type {
 } from "../../../Ports/DrivenPorts/DB";
 
 import { generateRandomCode } from "./_utils_/generateRandomCode";
+import { errorMessages } from "../../../utils/ErrorMessages";
 
 interface Dependences {
   userRepository: UserRepository;
@@ -23,7 +24,7 @@ const makeRegisterVerificationCode = ({
 
     const user = await userRepository.getByEmail(formattedEmail);
 
-    if (!user) throw new Error("user does not exist");
+    if (!user) throw new Error(errorMessages.USER_NOT_EXIST);
 
     const verificationCode = generateRandomCode();
 

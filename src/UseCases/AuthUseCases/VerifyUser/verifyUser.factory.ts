@@ -4,6 +4,8 @@ import type {
 } from "../../../Ports/DrivenPorts/DB";
 import type { Token } from "../../../Ports/DrivenPorts/Token";
 
+import { errorMessages } from "../../../utils/ErrorMessages";
+
 interface Dependencies {
   userRepository: UserRepository;
   verificationCodeRepository: VerificationCodeRepository;
@@ -27,8 +29,9 @@ const makeVerifyUser = ({
       email,
     });
 
-    if (!code) throw new Error("no confirmation code for this user");
-    if (code !== verificationCode) throw new Error("wrong verification code");
+    if (!code) throw new Error(errorMessages.USER_HAS_NO_VERIFICATION_CODE);
+    if (code !== verificationCode)
+      throw new Error(errorMessages.WRONG_VERIFICATION_CODE);
 
     await verificationCodeRepository.deleteCode({ email });
     const user = await userRepository.updateUser({ email, isConfirmed: true });

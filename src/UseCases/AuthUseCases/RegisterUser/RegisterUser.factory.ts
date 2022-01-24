@@ -1,11 +1,12 @@
 import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
+import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
+
 import { User } from "../../../Entities/User/User";
+import { errorMessages } from "../../../utils/ErrorMessages";
 
 interface Dependences {
   userRepository: UserRepository;
-  passwordManager: {
-    generateHash: (passwordLiteral: string) => string;
-  };
+  passwordManager: PasswordManager;
 }
 
 interface SignupBody {
@@ -20,7 +21,7 @@ const makeRegisterUser = ({ userRepository, passwordManager }: Dependences) => {
 
     const realUser = await userRepository.getByEmail(user.email);
 
-    if (realUser) throw new Error("email already used");
+    if (realUser) throw new Error(errorMessages.USED_EMAIL);
 
     const newUser = await userRepository.registerNewUser({
       userId: user.userId,
