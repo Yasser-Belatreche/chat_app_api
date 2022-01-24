@@ -1,3 +1,5 @@
+import { errorMessages } from "../../utils/ErrorMessages";
+
 interface Dependencies {
   ID: {
     generateRandomId: () => string;
@@ -29,14 +31,13 @@ const makeUser = ({ ID }: Dependencies) => {
         this.formatValues(params);
 
       if (name && !this.isValidName(name))
-        this.InvalidPropertyError("name should have more than 4 characters");
+        throw new Error(errorMessages.SHORT_USER_NAME);
 
-      if (!this.isValidEmail(email)) this.InvalidPropertyError("unvalid email");
+      if (!this.isValidEmail(email))
+        throw new Error(errorMessages.INVALID_EMAIL);
 
       if (!this.isValidPassword(password))
-        this.InvalidPropertyError(
-          "password should have more than 8 characters"
-        );
+        throw new Error(errorMessages.INVALID_PASSWORD);
 
       this._userId = userId || ID.generateRandomId();
       this._name = name;
@@ -63,9 +64,7 @@ const makeUser = ({ ID }: Dependencies) => {
 
     public set password(v: string) {
       if (!this.isValidPassword(v))
-        this.InvalidPropertyError(
-          "password should have more than 8 characters"
-        );
+        throw new Error(errorMessages.INVALID_PASSWORD);
 
       this._password = v;
     }
@@ -97,10 +96,6 @@ const makeUser = ({ ID }: Dependencies) => {
 
     private isValidPassword(pass: string): boolean {
       return pass.length >= 8;
-    }
-
-    private InvalidPropertyError(message: string): never {
-      throw new Error(message);
     }
   };
 };
