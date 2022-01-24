@@ -1,13 +1,8 @@
+import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
 import { User } from "../../../Entities/User/User";
-import type { IUser } from "../../../Entities/User/User.factory";
-
-import { generateRandomCode } from "./_utils_/generateRandomCode";
 
 interface Dependences {
-  userRepository: {
-    getByEmail: (email: string) => Promise<IUser | undefined>;
-    registerNewUser: (user: IUser) => Promise<IUser>;
-  };
+  userRepository: UserRepository;
   passwordManager: {
     generateHash: (passwordLiteral: string) => string;
   };
@@ -19,16 +14,15 @@ interface SignupBody {
   password: string;
 }
 
-const makeSignup =
-  ({ userRepository, passwordManager }: Dependences) =>
-  async (args: SignupBody) => {
+const makeRegisterUser = ({ userRepository, passwordManager }: Dependences) => {
+  return async (args: SignupBody) => {
     const user = new User(args);
 
     const realUser = await userRepository.getByEmail(user.email);
 
     if (realUser) throw new Error("email already used");
 
-    await userRepository.registerNewUser({
+    const newUser = await userRepository.registerNewUser({
       userId: user.userId,
       name: user.name,
       email: user.email,
@@ -36,7 +30,8 @@ const makeSignup =
       isConfirmed: user.isConfirmed,
     });
 
-    return generateRandomCode();
+    return newUser;
   };
+};
 
-export { makeSignup };
+export { makeRegisterUser };

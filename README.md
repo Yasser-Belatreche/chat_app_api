@@ -1,5 +1,7 @@
 # Start the server
 
+> The internal world is not connected to the external world yet, so the server is not gonna work
+
 Open your terminal window and run the following commands :
 
 ```

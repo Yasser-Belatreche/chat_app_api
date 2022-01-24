@@ -1,31 +1,21 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
+import { getMocks } from "../../__mocks__";
+
 import { makeLogin } from "./Login.factory";
 
 chai.use(chaiAsPromised);
-/**
- * 3 - return a token when everything is OK
- */
 
 describe("Login use case", () => {
-  const realUser = {
-    userId: "myUserId",
-    name: "someName",
-    email: "email@gmail.com",
-    password: "hashedPassword",
-  };
-  const userRepository: any = {
-    getByEmail: (e: string) => Promise.resolve(realUser),
-  };
-  const passwordManager: any = {
-    compareHashWithLiteral: (args: any) => true,
-  };
-  const Token: any = {
-    generateToken: (id: string) => `Bearer mySuperSecretToken`,
-  };
+  const {
+    DB: { userRepository },
+    passwordManager,
+    token,
+    user,
+  } = getMocks();
 
-  const login = makeLogin({ userRepository, passwordManager, Token });
+  const login = makeLogin({ userRepository, passwordManager, token });
 
   it("should not be able to login with invalid inputs", async () => {
     const userInfoWithUnvalidEmail = {
@@ -54,11 +44,11 @@ describe("Login use case", () => {
   });
 
   it("should not be able to login when the password does not match the email", async () => {
-    userRepository.getByEmail = (e: string) => Promise.resolve(realUser);
+    userRepository.getByEmail = (e: string) => Promise.resolve(user);
     passwordManager.compareHashWithLiteral = (args: any) => false;
 
     await expect(
-      login({ email: realUser.email, password: "wrongPassword" })
+      login({ email: user.email, password: "wrongPassword" })
     ).to.be.rejectedWith("wrong credentials");
   });
 
@@ -66,7 +56,7 @@ describe("Login use case", () => {
     passwordManager.compareHashWithLiteral = (args: any) => true;
 
     await expect(
-      login({ email: realUser.email, password: "wrongPassword" })
+      login({ email: user.email, password: "wrongPassword" })
     ).to.eventually.include("Bearer ");
   });
 });

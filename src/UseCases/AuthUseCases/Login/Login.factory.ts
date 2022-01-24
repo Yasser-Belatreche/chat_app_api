@@ -1,16 +1,14 @@
+import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
+import type { Token } from "../../../Ports/DrivenPorts/Token";
+
 import { User } from "../../../Entities/User/User";
-import type { IUser } from "../../../Entities/User/User.factory";
 
 interface Dependencies {
-  userRepository: {
-    getByEmail: (email: string) => Promise<IUser | undefined>;
-  };
+  userRepository: UserRepository;
   passwordManager: {
     compareHashWithLiteral: (arg: { hash: string; literal: string }) => boolean;
   };
-  Token: {
-    generateToken: (id: string) => string;
-  };
+  token: Token;
 }
 
 interface LoginBody {
@@ -18,9 +16,12 @@ interface LoginBody {
   password: string;
 }
 
-const makeLogin =
-  ({ userRepository, passwordManager, Token }: Dependencies) =>
-  async (args: LoginBody) => {
+const makeLogin = ({
+  userRepository,
+  passwordManager,
+  token,
+}: Dependencies) => {
+  return async (args: LoginBody) => {
     const user = new User(args);
     const realUser = await userRepository.getByEmail(user.email);
 
@@ -32,9 +33,10 @@ const makeLogin =
     });
     if (!isMatch) throw new Error("wrong credentials");
 
-    const token = Token.generateToken(realUser.userId);
+    const userToken = token.generateToken(realUser.userId);
 
-    return `Bearer ${token}`;
+    return `Bearer ${userToken}`;
   };
+};
 
 export { makeLogin };
