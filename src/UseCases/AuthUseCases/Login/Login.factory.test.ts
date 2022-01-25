@@ -9,13 +9,13 @@ chai.use(chaiAsPromised);
 
 describe("Login use case", () => {
   const {
-    DB: { userRepository },
+    DB: { usersRepository },
     passwordManager,
-    token,
+    tokenManager,
     user,
   } = getMocks();
 
-  const login = makeLogin({ userRepository, passwordManager, token });
+  const login = makeLogin({ usersRepository, passwordManager, tokenManager });
 
   it("should not be able to login with invalid inputs", async () => {
     const userInfoWithUnvalidEmail = {
@@ -36,7 +36,7 @@ describe("Login use case", () => {
   });
 
   it("should not be able to login when the user does not exist", async () => {
-    userRepository.getByEmail = (e: string) => Promise.resolve(undefined);
+    usersRepository.getByEmail = (e: string) => Promise.resolve(undefined);
 
     await expect(
       login({ email: "email@noExist.com", password: "wrongPassword" })
@@ -44,7 +44,7 @@ describe("Login use case", () => {
   });
 
   it("should not be able to login when the password does not match the email", async () => {
-    userRepository.getByEmail = (e: string) => Promise.resolve(user);
+    usersRepository.getByEmail = (e: string) => Promise.resolve(user);
     passwordManager.compareHashWithLiteral = (args: any) => false;
 
     await expect(

@@ -1,17 +1,23 @@
-import { getUserRepository, getVerificationCodeRepository } from "./DB";
+import {
+  getMessagesRepository,
+  getUsersRepository,
+  getVerificationCodesRepository,
+} from "./DB";
 import { getEmailService } from "./emailService";
 import { getPasswordManager } from "./passwordManager";
-import { getToken } from "./token";
-import { userInfo } from "./user";
+import { getTokenManager } from "./tokenManger";
+import { userInfo, messageInfo } from "./entities";
 
 const getMocks = () => ({
   user: userInfo,
+  message: messageInfo,
   passwordManager: getPasswordManager(),
-  token: getToken(),
+  tokenManager: getTokenManager(),
   emailService: getEmailService(),
   DB: {
-    userRepository: getUserRepository(),
-    verificationCodeRepository: getVerificationCodeRepository(),
+    usersRepository: getUsersRepository(),
+    verificationCodesRepository: getVerificationCodesRepository(),
+    messagesRepository: getMessagesRepository(),
   },
 });
 

@@ -7,17 +7,18 @@ import { makeRegisterVerificationCode } from "./RegisterVerificationCode.factory
 
 describe("RegisterVerificationCode use case", () => {
   const {
-    DB: { userRepository, verificationCodeRepository },
+    DB: { usersRepository, verificationCodesRepository },
     user,
   } = getMocks();
 
   const registerVerificationCode = makeRegisterVerificationCode({
-    userRepository,
-    verificationCodeRepository,
+    usersRepository,
+    verificationCodesRepository,
   });
 
   it("should not register a verification code from an email does not exist", async () => {
-    userRepository.getByEmail = async (e: string) => Promise.resolve(undefined);
+    usersRepository.getByEmail = async (e: string) =>
+      Promise.resolve(undefined);
 
     const fakeEmail = "fake@email.com";
     await expect(
@@ -26,13 +27,13 @@ describe("RegisterVerificationCode use case", () => {
   });
 
   it("should save the code in the DB and return it", async () => {
-    userRepository.getByEmail = Sinon.spy(() => Promise.resolve(user));
+    usersRepository.getByEmail = Sinon.spy(() => Promise.resolve(user));
 
     const verificationCode = await registerVerificationCode({
       email: user.email,
     });
 
-    expect(verificationCodeRepository.addCode.calledOnce).to.be.true;
+    expect(verificationCodesRepository.addCode.calledOnce).to.be.true;
 
     expect(verificationCode)
       .to.be.greaterThanOrEqual(1000)

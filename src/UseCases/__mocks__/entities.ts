@@ -9,4 +9,10 @@ const userInfo = {
   isConfirmed: false,
 };
 
-export { userInfo };
+const messageInfo = {
+  senderId: faker.datatype.uuid(),
+  receiverId: faker.datatype.uuid(),
+  content: faker.datatype.string(4),
+};
+
+export { userInfo, messageInfo };

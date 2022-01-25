@@ -1,14 +1,14 @@
-import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
-import type { Token } from "../../../Ports/DrivenPorts/Token";
+import type { UsersRepository } from "../../../Ports/DrivenPorts/DB";
+import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
 import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
 
 import { User } from "../../../Entities/User/User";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
 interface Dependencies {
-  userRepository: UserRepository;
+  usersRepository: UsersRepository;
   passwordManager: PasswordManager;
-  token: Token;
+  tokenManager: TokenManager;
 }
 
 interface LoginBody {
@@ -17,13 +17,13 @@ interface LoginBody {
 }
 
 const makeLogin = ({
-  userRepository,
+  usersRepository,
   passwordManager,
-  token,
+  tokenManager,
 }: Dependencies) => {
   return async (args: LoginBody) => {
     const user = new User(args);
-    const realUser = await userRepository.getByEmail(user.email);
+    const realUser = await usersRepository.getByEmail(user.email);
 
     if (!realUser) throw new Error(errorMessages.USER_NOT_EXIST);
 
@@ -33,7 +33,7 @@ const makeLogin = ({
     });
     if (!isMatch) throw new Error(errorMessages.WRONG_PASSWORD);
 
-    const userToken = token.generateToken(realUser.userId);
+    const userToken = tokenManager.generateToken(realUser.userId);
 
     return `Bearer ${userToken}`;
   };

@@ -1,6 +1,6 @@
 import type { EmailService } from "../../../Ports/DrivenPorts/EmailService";
 
-interface Dependences {
+interface Dependencies {
   emailService: EmailService;
 }
 
@@ -9,7 +9,7 @@ interface Args {
   verificationCode: number;
 }
 
-const makeSendVerificationEmail = ({ emailService }: Dependences) => {
+const makeSendVerificationEmail = ({ emailService }: Dependencies) => {
   return async ({ email, verificationCode }: Args) => {
     const HTMLTemplate = `
       <p>Here is Your Verification code:</p>

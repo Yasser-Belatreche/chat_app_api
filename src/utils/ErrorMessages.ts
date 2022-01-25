@@ -10,6 +10,7 @@ const errorMessages = {
   SHORT_USER_NAME: "name should have more than 4 characters",
   INVALID_EMAIL: "unvalid email",
   INVALID_PASSWORD: "password should have more than 8 characters",
+  INVALID_AUTH_TOKEN: "invalid authentication token",
 };
 
 export { errorMessages };

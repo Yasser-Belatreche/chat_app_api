@@ -1,6 +1,6 @@
 import { errorMessages } from "../../utils/ErrorMessages";
 
-interface IMessage {
+export interface IMessage {
   senderId: string;
   receiverId: string;
   content: string;

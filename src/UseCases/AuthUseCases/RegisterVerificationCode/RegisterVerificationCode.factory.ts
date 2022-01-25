@@ -1,14 +1,14 @@
 import type {
-  UserRepository,
-  VerificationCodeRepository,
+  UsersRepository,
+  VerificationCodesRepository,
 } from "../../../Ports/DrivenPorts/DB";
 
 import { generateRandomCode } from "./_utils_/generateRandomCode";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependences {
-  userRepository: UserRepository;
-  verificationCodeRepository: VerificationCodeRepository;
+interface Dependencies {
+  usersRepository: UsersRepository;
+  verificationCodesRepository: VerificationCodesRepository;
 }
 
 interface Args {
@@ -16,19 +16,19 @@ interface Args {
 }
 
 const makeRegisterVerificationCode = ({
-  userRepository,
-  verificationCodeRepository,
-}: Dependences) => {
+  usersRepository,
+  verificationCodesRepository,
+}: Dependencies) => {
   return async ({ email }: Args) => {
     const formattedEmail = email.trim().toLowerCase();
 
-    const user = await userRepository.getByEmail(formattedEmail);
+    const user = await usersRepository.getByEmail(formattedEmail);
 
     if (!user) throw new Error(errorMessages.USER_NOT_EXIST);
 
     const verificationCode = generateRandomCode();
 
-    await verificationCodeRepository.addCode({
+    await verificationCodesRepository.addCode({
       email: user.email,
       verificationCode,
     });

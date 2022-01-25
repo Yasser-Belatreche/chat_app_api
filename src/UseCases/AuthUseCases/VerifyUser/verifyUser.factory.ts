@@ -1,15 +1,15 @@
 import type {
-  UserRepository,
-  VerificationCodeRepository,
+  UsersRepository,
+  VerificationCodesRepository,
 } from "../../../Ports/DrivenPorts/DB";
-import type { Token } from "../../../Ports/DrivenPorts/Token";
+import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
 
 import { errorMessages } from "../../../utils/ErrorMessages";
 
 interface Dependencies {
-  userRepository: UserRepository;
-  verificationCodeRepository: VerificationCodeRepository;
-  token: Token;
+  usersRepository: UsersRepository;
+  verificationCodesRepository: VerificationCodesRepository;
+  tokenManager: TokenManager;
 }
 
 interface Args {
@@ -18,14 +18,14 @@ interface Args {
 }
 
 const makeVerifyUser = ({
-  userRepository,
-  verificationCodeRepository,
-  token,
+  usersRepository,
+  verificationCodesRepository,
+  tokenManager,
 }: Dependencies) => {
   return async ({ email: unformattedEmail, verificationCode }: Args) => {
     const email = unformattedEmail.trim().toLocaleLowerCase();
 
-    const code = await verificationCodeRepository.getCode({
+    const code = await verificationCodesRepository.getCode({
       email,
     });
 
@@ -33,10 +33,10 @@ const makeVerifyUser = ({
     if (code !== verificationCode)
       throw new Error(errorMessages.WRONG_VERIFICATION_CODE);
 
-    await verificationCodeRepository.deleteCode({ email });
-    const user = await userRepository.updateUser({ email, isConfirmed: true });
+    await verificationCodesRepository.deleteCode({ email });
+    const user = await usersRepository.updateUser({ email, isConfirmed: true });
 
-    const userToken = token.generateToken(user.userId);
+    const userToken = tokenManager.generateToken(user.userId);
 
     return `Bearer ${userToken}`;
   };

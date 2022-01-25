@@ -12,21 +12,21 @@ import { makeVerifyUser } from "./verifyUser.factory";
 
 describe("VerifyUser use case", () => {
   const {
-    DB: { userRepository, verificationCodeRepository },
-    token,
+    DB: { usersRepository, verificationCodesRepository },
+    tokenManager,
     user,
   } = getMocks();
 
   const correctCode = 1234;
 
   const verifyUser = makeVerifyUser({
-    userRepository,
-    verificationCodeRepository,
-    token,
+    usersRepository,
+    verificationCodesRepository,
+    tokenManager,
   });
 
   it("should not verify a non exsiting user", async () => {
-    verificationCodeRepository.getCode = Sinon.spy(() =>
+    verificationCodesRepository.getCode = Sinon.spy(() =>
       Promise.resolve(undefined)
     );
 
@@ -38,7 +38,7 @@ describe("VerifyUser use case", () => {
   });
 
   it("should not verify the user if the verification code is wrong", async () => {
-    verificationCodeRepository.getCode = Sinon.spy(() =>
+    verificationCodesRepository.getCode = Sinon.spy(() =>
       Promise.resolve(correctCode)
     );
 
@@ -51,7 +51,7 @@ describe("VerifyUser use case", () => {
 
   it("when the code is correct, confirme the user and remove the old verification code, and return the user token", async () => {
     const userToken = faker.datatype.string(20);
-    token.generateToken = Sinon.spy(() => userToken);
+    tokenManager.generateToken = Sinon.spy(() => userToken);
 
     const verificationArgs = {
       email: user.email,
@@ -62,15 +62,7 @@ describe("VerifyUser use case", () => {
       `Bearer ${userToken}`
     );
 
-    expect(verificationCodeRepository.deleteCode.calledOnce).to.be.true;
-    expect(
-      verificationCodeRepository.deleteCode.getCalls()[0].args[0]
-    ).to.include({ email: verificationArgs.email.toLocaleLowerCase() });
-
-    expect(userRepository.updateUser.calledOnce).to.be.true;
-    expect(userRepository.updateUser.getCalls()[0].args[0]).to.include({
-      email: verificationArgs.email.toLocaleLowerCase(),
-      isConfirmed: true,
-    });
+    expect(verificationCodesRepository.deleteCode.calledOnce).to.be.true;
+    expect(usersRepository.updateUser.calledOnce).to.be.true;
   });
 });

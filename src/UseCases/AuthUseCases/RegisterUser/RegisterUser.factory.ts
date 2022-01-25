@@ -1,11 +1,11 @@
-import type { UserRepository } from "../../../Ports/DrivenPorts/DB";
+import type { UsersRepository } from "../../../Ports/DrivenPorts/DB";
 import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
 
 import { User } from "../../../Entities/User/User";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependences {
-  userRepository: UserRepository;
+interface Dependencies {
+  usersRepository: UsersRepository;
   passwordManager: PasswordManager;
 }
 
@@ -15,15 +15,18 @@ interface SignupBody {
   password: string;
 }
 
-const makeRegisterUser = ({ userRepository, passwordManager }: Dependences) => {
+const makeRegisterUser = ({
+  usersRepository,
+  passwordManager,
+}: Dependencies) => {
   return async (args: SignupBody) => {
     const user = new User(args);
 
-    const realUser = await userRepository.getByEmail(user.email);
+    const realUser = await usersRepository.getByEmail(user.email);
 
     if (realUser) throw new Error(errorMessages.USED_EMAIL);
 
-    const newUser = await userRepository.registerNewUser({
+    const newUser = await usersRepository.registerNewUser({
       userId: user.userId,
       name: user.name,
       email: user.email,

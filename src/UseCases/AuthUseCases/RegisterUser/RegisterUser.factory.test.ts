@@ -11,7 +11,7 @@ chai.use(chaiAsPromised);
 
 describe("RegisterUser use case", () => {
   const {
-    DB: { userRepository },
+    DB: { usersRepository },
     passwordManager,
     user: realUser,
   } = getMocks();
@@ -25,7 +25,7 @@ describe("RegisterUser use case", () => {
     isConfirmed: false,
   };
 
-  const registerUser = makeRegisterUser({ userRepository, passwordManager });
+  const registerUser = makeRegisterUser({ usersRepository, passwordManager });
 
   it("should not be able to register with invalid values", async () => {
     const valuesWithUnvalidName = {
@@ -64,8 +64,8 @@ describe("RegisterUser use case", () => {
   });
 
   it("should hash the password and register the user temporarly with unconfirmed status, and return the new user", async () => {
-    userRepository.getByEmail = (e: string) => Promise.resolve(undefined);
-    userRepository.registerNewUser = Sinon.spy(() =>
+    usersRepository.getByEmail = (e: string) => Promise.resolve(undefined);
+    usersRepository.registerNewUser = Sinon.spy(() =>
       Promise.resolve(registerNewUserReturn)
     );
 
@@ -75,7 +75,7 @@ describe("RegisterUser use case", () => {
     expect(passwordManager.generateHash.calledWith(realUser.password)).to.be
       .true;
 
-    expect(userRepository.registerNewUser.calledOnce).to.be.true;
+    expect(usersRepository.registerNewUser.calledOnce).to.be.true;
 
     expect(returnValue).to.equal(registerNewUserReturn);
   });
