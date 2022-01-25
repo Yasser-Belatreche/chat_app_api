@@ -1,5 +1,5 @@
 /**
- * 1 - should not get the contacts of user with an unvalid token
+ * 2 - should return the contacts list with the latest message in every conversation with each contact
  */
 
 import { expect } from "chai";
@@ -31,4 +31,6 @@ describe("GetAuthUserContacts use case", () => {
 
     tokenManager.decode = Sinon.spy(() => decodedAuthId);
   });
+
+  // it('should return the contacts list with ')
 });

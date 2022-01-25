@@ -2,10 +2,6 @@ import { expect } from "chai";
 import faker from "faker";
 import Sinon from "sinon";
 
-/**
- * 3 - return a chunk of the conversation (20 messages)  when everything is OK
- */
-
 import { getMocks } from "../../__mocks__";
 
 import { makeGetConversationChunk } from "./GetConversationChunk.factory";

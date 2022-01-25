@@ -11,6 +11,7 @@ export interface UsersRepository {
   getById: (id: string) => Promise<IUser | undefined>;
   registerNewUser: (user: IUser) => Promise<IUser>;
   updateUser: (user: PartilaUserWithIdOrEmail) => Promise<IUser>;
+  searchForUsers: (keyword: string) => Promise<IUser[]>;
 }
 
 export interface VerificationCodesRepository {
