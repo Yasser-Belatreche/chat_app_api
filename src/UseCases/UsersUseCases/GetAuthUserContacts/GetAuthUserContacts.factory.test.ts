@@ -32,5 +32,7 @@ describe("GetAuthUserContacts use case", () => {
     tokenManager.decode = Sinon.spy(() => decodedAuthId);
   });
 
-  // it('should return the contacts list with ')
+  it("should return the contacts list with latest message sent in that conversation", () => {
+    expect(2 + 2).to.equal(2);
+  });
 });
