@@ -1,8 +1,6 @@
-import type { EmailService } from "../../../Ports/DrivenPorts/EmailService";
+import type { WithEmailService } from "../../_utils_/types";
 
-interface Dependencies {
-  emailService: EmailService;
-}
+type Dependencies = WithEmailService;
 
 interface Args {
   email: string;

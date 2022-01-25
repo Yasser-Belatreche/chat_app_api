@@ -11,7 +11,14 @@ export type VerificationCode = {
 };
 
 export type ToGetConversation = {
+  /**
+   * first user Id
+   */
   between: string;
+
+  /**
+   * second user Id
+   */
   and: string;
   chunkNumber: number;
 };

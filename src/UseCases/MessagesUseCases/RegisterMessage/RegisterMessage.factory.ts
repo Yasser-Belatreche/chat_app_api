@@ -1,18 +1,16 @@
 import type {
-  MessagesRepository,
-  UsersRepository,
-} from "../../../Ports/DrivenPorts/DB";
+  WithMessagesRepository,
+  WithTokenManager,
+  WithUsersRepository,
+} from "../../_utils_/types";
 import type { IMessage } from "../../../Entities/Message/Message.factory";
-import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
 
 import { Message } from "../../../Entities/Message/Message";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  tokenManager: TokenManager;
-  usersRepository: UsersRepository;
-  messagesRepository: MessagesRepository;
-}
+type Dependencies = WithTokenManager &
+  WithMessagesRepository &
+  WithUsersRepository;
 
 interface Args extends Omit<IMessage, "senderId"> {
   senderToken: string;

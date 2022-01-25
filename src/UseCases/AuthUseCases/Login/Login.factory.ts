@@ -1,15 +1,15 @@
-import type { UsersRepository } from "../../../Ports/DrivenPorts/DB";
-import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
-import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
+import type {
+  WithPasswordManager,
+  WithTokenManager,
+  WithUsersRepository,
+} from "../../_utils_/types";
 
 import { User } from "../../../Entities/User/User";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  usersRepository: UsersRepository;
-  passwordManager: PasswordManager;
-  tokenManager: TokenManager;
-}
+type Dependencies = WithTokenManager &
+  WithPasswordManager &
+  WithUsersRepository;
 
 interface LoginBody {
   email: string;

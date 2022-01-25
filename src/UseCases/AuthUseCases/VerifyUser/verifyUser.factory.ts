@@ -1,16 +1,14 @@
 import type {
-  UsersRepository,
-  VerificationCodesRepository,
-} from "../../../Ports/DrivenPorts/DB";
-import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
+  WithTokenManager,
+  WithUsersRepository,
+  WithVerificationCodesRepository,
+} from "../../_utils_/types";
 
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  usersRepository: UsersRepository;
-  verificationCodesRepository: VerificationCodesRepository;
-  tokenManager: TokenManager;
-}
+type Dependencies = WithVerificationCodesRepository &
+  WithUsersRepository &
+  WithTokenManager;
 
 interface Args {
   email: string;

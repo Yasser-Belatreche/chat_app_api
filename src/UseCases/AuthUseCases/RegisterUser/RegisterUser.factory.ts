@@ -1,13 +1,12 @@
-import type { UsersRepository } from "../../../Ports/DrivenPorts/DB";
-import type { PasswordManager } from "../../../Ports/DrivenPorts/PasswordManager";
+import type {
+  WithPasswordManager,
+  WithUsersRepository,
+} from "../../_utils_/types";
 
 import { User } from "../../../Entities/User/User";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  usersRepository: UsersRepository;
-  passwordManager: PasswordManager;
-}
+type Dependencies = WithUsersRepository & WithPasswordManager;
 
 interface SignupBody {
   name: string;

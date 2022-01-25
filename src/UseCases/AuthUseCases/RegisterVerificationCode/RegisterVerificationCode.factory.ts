@@ -1,15 +1,12 @@
 import type {
-  UsersRepository,
-  VerificationCodesRepository,
-} from "../../../Ports/DrivenPorts/DB";
+  WithUsersRepository,
+  WithVerificationCodesRepository,
+} from "../../_utils_/types";
 
 import { generateRandomCode } from "./_utils_/generateRandomCode";
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  usersRepository: UsersRepository;
-  verificationCodesRepository: VerificationCodesRepository;
-}
+type Dependencies = WithUsersRepository & WithVerificationCodesRepository;
 
 interface Args {
   email: string;

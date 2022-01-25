@@ -14,7 +14,7 @@ describe("GetConversationChunk use case", () => {
   const decodedAuthId = faker.datatype.uuid();
   const validArgs = {
     authToken: faker.datatype.string(10),
-    conversationParticipantId: faker.datatype.uuid(),
+    with: faker.datatype.uuid(),
     chunkNumber: 1,
   };
 
@@ -49,7 +49,7 @@ describe("GetConversationChunk use case", () => {
     await expect(
       getConversationChunk({
         ...validArgs,
-        conversationParticipantId: "non existing user",
+        with: "non existing user",
       })
     ).to.be.rejectedWith("user does not exist");
 
@@ -62,7 +62,7 @@ describe("GetConversationChunk use case", () => {
         ...Array(10).fill(message),
         {
           senderId: decodedAuthId,
-          receiverId: validArgs.conversationParticipantId,
+          receiverId: validArgs.with,
           content: "hello my old friend",
         },
       ])
@@ -72,7 +72,7 @@ describe("GetConversationChunk use case", () => {
       .to.eventually.be.an("array")
       .to.deep.include({
         senderId: decodedAuthId,
-        receiverId: validArgs.conversationParticipantId,
+        receiverId: validArgs.with,
         content: "hello my old friend",
       });
 

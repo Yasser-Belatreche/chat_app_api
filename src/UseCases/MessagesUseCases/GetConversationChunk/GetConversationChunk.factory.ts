@@ -1,20 +1,22 @@
-import type {
-  MessagesRepository,
-  UsersRepository,
-} from "../../../Ports/DrivenPorts/DB";
-import type { TokenManager } from "../../../Ports/DrivenPorts/TokenManager";
+import {
+  WithMessagesRepository,
+  WithTokenManager,
+  WithUsersRepository,
+} from "../../_utils_/types";
 
 import { errorMessages } from "../../../utils/ErrorMessages";
 
-interface Dependencies {
-  tokenManager: TokenManager;
-  usersRepository: UsersRepository;
-  messagesRepository: MessagesRepository;
-}
+type Dependencies = WithTokenManager &
+  WithUsersRepository &
+  WithMessagesRepository;
 
 interface Args {
   authToken: string;
-  conversationParticipantId: string;
+
+  /**
+   * conversation participant id
+   */
+  with: string;
   chunkNumber: number;
 }
 
@@ -23,11 +25,7 @@ const makeGetConversationChunk = ({
   usersRepository,
   messagesRepository,
 }: Dependencies) => {
-  return async ({
-    authToken,
-    conversationParticipantId: participantId,
-    chunkNumber,
-  }: Args) => {
+  return async ({ authToken, with: participantId, chunkNumber }: Args) => {
     const authUserId = tokenManager.decode(authToken);
 
     const participant = await usersRepository.getById(participantId);
