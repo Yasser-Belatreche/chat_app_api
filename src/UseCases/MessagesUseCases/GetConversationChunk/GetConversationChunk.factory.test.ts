@@ -8,7 +8,7 @@ import Sinon from "sinon";
 
 import { getMocks } from "../../__mocks__";
 
-import { makeGetConversationChunk } from "./GetConversation.factory";
+import { makeGetConversationChunk } from "./GetConversationChunk.factory";
 
 describe("GetConversationChunk use case", () => {
   const decodedAuthId = faker.datatype.uuid();
