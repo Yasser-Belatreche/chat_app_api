@@ -11,6 +11,7 @@ const errorMessages = {
   INVALID_EMAIL: "unvalid email",
   INVALID_PASSWORD: "password should have more than 8 characters",
   INVALID_AUTH_TOKEN: "invalid authentication token",
+  DB_ERROR: "database error",
 };
 
 export { errorMessages };

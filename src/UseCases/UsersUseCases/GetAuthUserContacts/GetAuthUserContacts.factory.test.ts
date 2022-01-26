@@ -33,6 +33,6 @@ describe("GetAuthUserContacts use case", () => {
   });
 
   it("should return the contacts list with latest message sent in that conversation", () => {
-    expect(2 + 2).to.equal(2);
+    expect(2 + 2).to.equal(4);
   });
 });

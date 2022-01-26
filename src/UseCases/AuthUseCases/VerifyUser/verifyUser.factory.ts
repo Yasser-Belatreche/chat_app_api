@@ -36,7 +36,7 @@ const makeVerifyUser = ({
 
     const userToken = tokenManager.generateToken(user.userId);
 
-    return `Bearer ${userToken}`;
+    return userToken;
   };
 };
 

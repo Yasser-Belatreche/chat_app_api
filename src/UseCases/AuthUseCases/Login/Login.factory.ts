@@ -35,7 +35,7 @@ const makeLogin = ({
 
     const userToken = tokenManager.generateToken(realUser.userId);
 
-    return `Bearer ${userToken}`;
+    return userToken;
   };
 };
 

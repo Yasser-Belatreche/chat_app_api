@@ -4,14 +4,15 @@ import type {
   PartilaUserWithIdOrEmail,
   ToGetConversation,
   VerificationCode,
+  ReturnedUser,
 } from "./_utils_/types";
 
 export interface UsersRepository {
-  getByEmail: (email: string) => Promise<IUser | undefined>;
-  getById: (id: string) => Promise<IUser | undefined>;
-  registerNewUser: (user: IUser) => Promise<IUser>;
-  updateUser: (user: PartilaUserWithIdOrEmail) => Promise<IUser>;
-  searchForUsers: (keyword: string) => Promise<IUser[]>;
+  getByEmail: (email: string) => Promise<ReturnedUser | undefined>;
+  getById: (id: string) => Promise<ReturnedUser | undefined>;
+  registerNewUser: (user: IUser) => Promise<ReturnedUser>;
+  updateUser: (user: PartilaUserWithIdOrEmail) => Promise<ReturnedUser>;
+  searchForUsers: (keyword: string) => Promise<ReturnedUser[]>;
 }
 
 export interface VerificationCodesRepository {

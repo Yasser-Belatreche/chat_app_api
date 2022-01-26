@@ -26,6 +26,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "google-libphonenumber": "^3.2.26",
+    "pg": "^8.7.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/mocha": "^9.0.0",
     "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.8",
+    "@types/pg": "^8.6.4",
     "@types/sinon": "^10.0.8",
     "@types/uuid": "^8.3.4",
     "chai": "^4.3.4",

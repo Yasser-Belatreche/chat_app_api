@@ -15,7 +15,9 @@ const makeSearchForUser = ({ tokenManager, usersRepository }: Dependencies) => {
     const _ = tokenManager.decode(authToken);
     if (!searchKeyword) return [];
 
-    return await usersRepository.searchForUsers(searchKeyword);
+    return await usersRepository.searchForUsers(
+      searchKeyword.trim().toLowerCase()
+    );
   };
 };
 

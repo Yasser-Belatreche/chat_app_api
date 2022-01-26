@@ -51,7 +51,7 @@ describe("VerifyUser use case", () => {
 
   it("when the code is correct, confirme the user and remove the old verification code, and return the user token", async () => {
     const userToken = faker.datatype.string(20);
-    tokenManager.generateToken = Sinon.spy(() => userToken);
+    tokenManager.generateToken = Sinon.spy(() => `Bearer ${userToken}`);
 
     const verificationArgs = {
       email: user.email,
