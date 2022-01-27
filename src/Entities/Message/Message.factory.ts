@@ -1,27 +1,40 @@
 import { errorMessages } from "../../utils/ErrorMessages";
 
-export interface IMessage {
+interface NewMessage {
   senderId: string;
   receiverId: string;
   content: string;
 }
 
+export interface IMessage extends NewMessage {
+  messageId: string;
+  createdAt: string;
+}
+
 const makeMessage = () => {
   return class Message implements IMessage {
+    private _messageId: string;
     private _senderId: string;
     private _receiverId: string;
     private _content: string;
+    private _createdAt: string;
 
-    constructor(message: IMessage) {
+    constructor(message: NewMessage) {
       const { senderId, receiverId, content } = this.formatValues(message);
 
       if (!senderId) throw new Error(errorMessages.MESSAGE_HAS_NO_SENDER);
       if (!receiverId) throw new Error(errorMessages.MESSAGE_HAS_NO_RECEIVER);
       if (!content) throw new Error(errorMessages.MESSAGE_HAS_NO_CONTENT);
 
+      this._messageId = "";
       this._receiverId = receiverId;
       this._senderId = senderId;
       this._content = content;
+      this._createdAt = new Date().toJSON();
+    }
+
+    public get messageId(): string {
+      return this._messageId;
     }
 
     public get senderId(): string {
@@ -36,7 +49,11 @@ const makeMessage = () => {
       return this._content;
     }
 
-    private formatValues(values: IMessage): IMessage {
+    public get createdAt(): string {
+      return this._createdAt;
+    }
+
+    private formatValues(values: NewMessage): NewMessage {
       return {
         receiverId: values.receiverId.trim(),
         senderId: values.senderId.trim(),

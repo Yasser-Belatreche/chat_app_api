@@ -22,18 +22,18 @@ const makeLogin = ({
   tokenManager,
 }: Dependencies) => {
   return async (args: LoginBody) => {
-    const user = new User(args);
-    const realUser = await usersRepository.getByEmail(user.email, {
-      withPassword: true,
-    });
+    const email = args.email.trim().toLowerCase();
+    const password = args.password.trim();
 
-    if (!realUser) throw new Error(errorMessages.USER_NOT_EXIST);
+    const realUser = await usersRepository.getByEmail(email);
+
+    if (!realUser) throw new Error(errorMessages.CREDENTIALS_ERROR);
 
     const isMatch = passwordManager.compareHashWithLiteral({
       hash: realUser.password,
-      literal: user.password,
+      literal: password,
     });
-    if (!isMatch) throw new Error(errorMessages.WRONG_PASSWORD);
+    if (!isMatch) throw new Error(errorMessages.CREDENTIALS_ERROR);
 
     const userToken = tokenManager.generateToken(realUser.userId);
 

@@ -23,6 +23,7 @@ describe("RegisterUser use case", () => {
     email: realUser.email.toLowerCase(),
     password: HASH,
     isConfirmed: false,
+    createdAt: new Date(),
   };
 
   const registerUser = makeRegisterUser({ usersRepository, passwordManager });
@@ -65,17 +66,12 @@ describe("RegisterUser use case", () => {
 
   it("should hash the password and register the user temporarly with unconfirmed status, and return the new user", async () => {
     usersRepository.getByEmail = (e: string) => Promise.resolve(undefined);
+    passwordManager.generateHash = () => HASH;
     usersRepository.registerNewUser = Sinon.spy(() =>
       Promise.resolve(registerNewUserReturn)
     );
 
     const returnValue = await registerUser(realUser);
-
-    expect(passwordManager.generateHash.calledOnce).to.be.true;
-    expect(passwordManager.generateHash.calledWith(realUser.password)).to.be
-      .true;
-
-    expect(usersRepository.registerNewUser.calledOnce).to.be.true;
 
     expect(returnValue).to.equal(registerNewUserReturn);
   });

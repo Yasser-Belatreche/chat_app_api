@@ -7,6 +7,7 @@ const userInfo = {
   email: faker.internet.email(),
   password: faker.internet.password(9),
   isConfirmed: false,
+  createdAt: new Date(),
 };
 
 const messageInfo = {

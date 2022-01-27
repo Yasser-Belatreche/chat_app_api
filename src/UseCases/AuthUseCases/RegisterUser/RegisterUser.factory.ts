@@ -22,18 +22,11 @@ const makeRegisterUser = ({
     const user = new User(args);
 
     const realUser = await usersRepository.getByEmail(user.email);
-
     if (realUser) throw new Error(errorMessages.USED_EMAIL);
 
-    const newUser = await usersRepository.registerNewUser({
-      userId: user.userId,
-      name: user.name,
-      email: user.email,
-      password: passwordManager.generateHash(user.password),
-      isConfirmed: user.isConfirmed,
-    });
+    user.password = passwordManager.generateHash(user.password);
 
-    return newUser;
+    return await usersRepository.registerNewUser(user);
   };
 };
 

@@ -12,7 +12,7 @@ type Dependencies = WithTokenManager &
   WithMessagesRepository &
   WithUsersRepository;
 
-interface Args extends Omit<IMessage, "senderId"> {
+interface Args extends Omit<IMessage, "senderId" | "messageId" | "createdAt"> {
   senderToken: string;
 }
 

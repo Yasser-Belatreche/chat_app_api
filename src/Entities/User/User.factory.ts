@@ -1,24 +1,24 @@
+import type { IDManager } from "../../Ports/DrivenPorts/IDManager";
+
 import { errorMessages } from "../../utils/ErrorMessages";
 
 interface Dependencies {
-  ID: {
-    generateRandomId: () => string;
-  };
+  idManager: IDManager;
 }
 
-interface NewUser {
+interface UserInfo {
   name: string;
   email: string;
   password: string;
 }
 
-export interface IUser extends NewUser {
+export interface IUser extends UserInfo {
   userId: string;
   createdAt: string;
   isConfirmed: boolean;
 }
 
-const makeUser = ({ ID }: Dependencies) => {
+const makeUser = ({ idManager }: Dependencies) => {
   return class User implements IUser {
     private _userId: string;
     private _name: string;
@@ -27,9 +27,8 @@ const makeUser = ({ ID }: Dependencies) => {
     private _createdAt: string;
     private _isConfirmed: boolean;
 
-    constructor(params: IUser | NewUser) {
-      const { userId, name, email, password, isConfirmed, createdAt } =
-        this.formatValues(params);
+    constructor(params: UserInfo) {
+      const { name, email, password } = this.formatValues(params);
 
       if (!this.isValidName(name))
         throw new Error(errorMessages.SHORT_USER_NAME);
@@ -40,12 +39,12 @@ const makeUser = ({ ID }: Dependencies) => {
       if (!this.isValidPassword(password))
         throw new Error(errorMessages.INVALID_PASSWORD);
 
-      this._userId = userId || ID.generateRandomId();
       this._name = name;
       this._email = email;
       this._password = password;
-      this._createdAt = createdAt || new Date().toJSON();
-      this._isConfirmed = !!isConfirmed;
+      this._userId = idManager.generateRandomId();
+      this._createdAt = new Date().toJSON();
+      this._isConfirmed = false;
     }
 
     public get userId(): string {
@@ -75,13 +74,12 @@ const makeUser = ({ ID }: Dependencies) => {
       return this._isConfirmed;
     }
 
-    public set isConfirmed(confirmed: boolean) {
-      this._isConfirmed = confirmed;
+    public get createdAt(): string {
+      return this._createdAt;
     }
 
-    private formatValues(values: IUser | NewUser): any {
+    private formatValues(values: UserInfo) {
       return {
-        ...values,
         name: values.name.trim().toLowerCase(),
         email: values.email.trim().toLowerCase(),
         password: values.password.trim(),

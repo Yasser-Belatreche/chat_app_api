@@ -17,30 +17,12 @@ describe("Login use case", () => {
 
   const login = makeLogin({ usersRepository, passwordManager, tokenManager });
 
-  it("should not be able to login with invalid inputs", async () => {
-    const userInfoWithUnvalidEmail = {
-      email: "eam",
-      password: "secretPassword",
-    };
-    const userInfoWithUnvalidPassword = {
-      email: "email@email.com",
-      password: "secret",
-    };
-
-    await expect(login(userInfoWithUnvalidEmail)).to.be.rejectedWith(
-      "unvalid email"
-    );
-    await expect(login(userInfoWithUnvalidPassword)).to.be.rejectedWith(
-      "should have more than 8 characters"
-    );
-  });
-
   it("should not be able to login when the user does not exist", async () => {
     usersRepository.getByEmail = (e: string) => Promise.resolve(undefined);
 
     await expect(
       login({ email: "email@noExist.com", password: "wrongPassword" })
-    ).to.be.rejectedWith("user does not exist");
+    ).to.be.rejectedWith("credentials error");
   });
 
   it("should not be able to login when the password does not match the email", async () => {
@@ -49,7 +31,7 @@ describe("Login use case", () => {
 
     await expect(
       login({ email: user.email, password: "wrongPassword" })
-    ).to.be.rejectedWith("wrong password");
+    ).to.be.rejectedWith("credentials error");
   });
 
   it("should return a user token when the password match the email", async () => {

@@ -63,7 +63,5 @@ describe("RegisterMessage use case", () => {
       receiverId: validMessage.receiverId,
       senderId: decodedSenderId,
     });
-
-    expect(messagesRepository.registerNewMessage.calledOnce).to.be.true;
   });
 });

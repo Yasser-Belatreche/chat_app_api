@@ -23,15 +23,13 @@ const makeVerifyUser = ({
   return async ({ email: unformattedEmail, verificationCode }: Args) => {
     const email = unformattedEmail.trim().toLowerCase();
 
-    const code = await verificationCodesRepository.getCode({
-      email,
-    });
+    const code = await verificationCodesRepository.getCode(email);
 
     if (!code) throw new Error(errorMessages.USER_HAS_NO_VERIFICATION_CODE);
     if (code !== verificationCode)
       throw new Error(errorMessages.WRONG_VERIFICATION_CODE);
 
-    await verificationCodesRepository.deleteCode({ email });
+    await verificationCodesRepository.deleteCode(email);
     const user = await usersRepository.confirmUser(email);
 
     const userToken = tokenManager.generateToken(user.userId);
