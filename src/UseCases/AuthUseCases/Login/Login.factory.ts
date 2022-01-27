@@ -23,7 +23,9 @@ const makeLogin = ({
 }: Dependencies) => {
   return async (args: LoginBody) => {
     const user = new User(args);
-    const realUser = await usersRepository.getByEmail(user.email);
+    const realUser = await usersRepository.getByEmail(user.email, {
+      withPassword: true,
+    });
 
     if (!realUser) throw new Error(errorMessages.USER_NOT_EXIST);
 

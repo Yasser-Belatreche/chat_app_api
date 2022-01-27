@@ -5,7 +5,13 @@ type PartialUserWithEmail = Partial<IUser> & { email: string };
 
 export type PartilaUserWithIdOrEmail = PartialUserWithId | PartialUserWithEmail;
 
-export type ReturnedUser = Omit<IUser, "isConfirmed">;
+export type ReturnedUser = {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  isConfirmed?: true;
+};
 
 export type VerificationCode = {
   email: string;

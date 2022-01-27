@@ -6,7 +6,7 @@ const getUsersRepository = (): any => ({
   getByEmail: Sinon.spy(() => Promise.resolve(userInfo)),
   getById: Sinon.spy(() => Promise.resolve(userInfo)),
   registerNewUser: Sinon.spy(() => Promise.resolve(userInfo)),
-  updateUser: Sinon.spy(() => Promise.resolve(userInfo)),
+  confirmUser: Sinon.spy(() => Promise.resolve(userInfo)),
   searchForUsers: Sinon.spy(() => Promise.resolve(Array(10).fill(userInfo))),
 });
 

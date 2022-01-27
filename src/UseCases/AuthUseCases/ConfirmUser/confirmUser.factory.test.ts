@@ -8,9 +8,9 @@ import faker from "faker";
 
 import { getMocks } from "../../__mocks__";
 
-import { makeVerifyUser } from "./verifyUser.factory";
+import { makeVerifyUser } from "./confirmUser.factory";
 
-describe("VerifyUser use case", () => {
+describe("ConfirmUser use case", () => {
   const {
     DB: { usersRepository, verificationCodesRepository },
     tokenManager,
@@ -63,6 +63,6 @@ describe("VerifyUser use case", () => {
     );
 
     expect(verificationCodesRepository.deleteCode.calledOnce).to.be.true;
-    expect(usersRepository.updateUser.calledOnce).to.be.true;
+    expect(usersRepository.confirmUser.calledOnce).to.be.true;
   });
 });

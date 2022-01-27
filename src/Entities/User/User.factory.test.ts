@@ -2,28 +2,19 @@ import { expect, use } from "chai";
 
 import { makeUser } from "./User.factory";
 
-/**
- * what define a User in my system
- *    - userId (generate a random one if it's not passed to the constructor)
- *    - name (if exist should be more than 4 characters)
- *    - email* (should be a valid email)
- *    - password* (should be more than 8 characters)
- */
-
 describe("User Entity", () => {
   const randomId = "someRandomId";
   const User = makeUser({ ID: { generateRandomId: () => randomId } });
 
-  const userInfoWithoutId = {
+  const newUser = {
     name: "Yasser",
     email: "email@example.com",
     password: "secretPasswrod",
   };
 
-  it("should create a user without a name", () => {
+  it("should not create a user without a name", () => {
     expect(
-      () =>
-        new User({ ...userInfoWithoutId, name: undefined, userId: "userId" })
+      () => new User({ ...newUser, name: "", userId: "userId" })
     ).to.not.throw();
   });
 

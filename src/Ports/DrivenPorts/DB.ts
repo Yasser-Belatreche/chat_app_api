@@ -7,11 +7,26 @@ import type {
   ReturnedUser,
 } from "./_utils_/types";
 
+interface Options {
+  /**
+   * whether you return the password or not, default to false
+   */
+  withPassword?: boolean;
+
+  /**
+   * whether you return just the users with confirmed email, or return anyone, default to false, if you set it to true, you will get an "isConfirmed" property
+   */
+  getNonConfirmed?: boolean;
+}
+
 export interface UsersRepository {
-  getByEmail: (email: string) => Promise<ReturnedUser | undefined>;
-  getById: (id: string) => Promise<ReturnedUser | undefined>;
-  registerNewUser: (user: IUser) => Promise<ReturnedUser>;
-  updateUser: (user: PartilaUserWithIdOrEmail) => Promise<ReturnedUser>;
+  getByEmail: (
+    email: string,
+    options?: Options
+  ) => Promise<ReturnedUser | undefined>;
+  getById: (id: string, options?: Options) => Promise<ReturnedUser | undefined>;
+  registerNewUser: (user: IUser & { name: string }) => Promise<ReturnedUser>;
+  confirmUser: (email: string) => Promise<ReturnedUser>;
   searchForUsers: (keyword: string) => Promise<ReturnedUser[]>;
 }
 

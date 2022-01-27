@@ -6,31 +6,32 @@ interface Dependencies {
   };
 }
 
-interface IUserWithoutId {
-  userId?: string;
-  name?: string;
+interface NewUser {
+  name: string;
   email: string;
   password: string;
-  isConfirmed?: boolean;
 }
 
-export interface IUser extends IUserWithoutId {
+export interface IUser extends NewUser {
   userId: string;
+  createdAt: string;
+  isConfirmed: boolean;
 }
 
 const makeUser = ({ ID }: Dependencies) => {
   return class User implements IUser {
     private _userId: string;
-    private _name?: string;
+    private _name: string;
     private _email: string;
     private _password: string;
+    private _createdAt: string;
     private _isConfirmed: boolean;
 
-    constructor(params: IUserWithoutId) {
-      const { userId, name, email, password, isConfirmed } =
+    constructor(params: IUser | NewUser) {
+      const { userId, name, email, password, isConfirmed, createdAt } =
         this.formatValues(params);
 
-      if (name && !this.isValidName(name))
+      if (!this.isValidName(name))
         throw new Error(errorMessages.SHORT_USER_NAME);
 
       if (!this.isValidEmail(email))
@@ -43,14 +44,15 @@ const makeUser = ({ ID }: Dependencies) => {
       this._name = name;
       this._email = email;
       this._password = password;
-      this._isConfirmed = Boolean(isConfirmed);
+      this._createdAt = createdAt || new Date().toJSON();
+      this._isConfirmed = !!isConfirmed;
     }
 
     public get userId(): string {
       return this._userId;
     }
 
-    public get name(): string | undefined {
+    public get name(): string {
       return this._name;
     }
 
@@ -77,11 +79,11 @@ const makeUser = ({ ID }: Dependencies) => {
       this._isConfirmed = confirmed;
     }
 
-    private formatValues(values: IUserWithoutId): IUserWithoutId {
+    private formatValues(values: IUser | NewUser): any {
       return {
         ...values,
-        name: values.name?.trim().toLowerCase(),
-        email: values.email.trim().toLocaleLowerCase(),
+        name: values.name.trim().toLowerCase(),
+        email: values.email.trim().toLowerCase(),
         password: values.password.trim(),
       };
     }

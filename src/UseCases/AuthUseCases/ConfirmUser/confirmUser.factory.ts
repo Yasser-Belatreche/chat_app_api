@@ -21,7 +21,7 @@ const makeVerifyUser = ({
   tokenManager,
 }: Dependencies) => {
   return async ({ email: unformattedEmail, verificationCode }: Args) => {
-    const email = unformattedEmail.trim().toLocaleLowerCase();
+    const email = unformattedEmail.trim().toLowerCase();
 
     const code = await verificationCodesRepository.getCode({
       email,
@@ -32,7 +32,7 @@ const makeVerifyUser = ({
       throw new Error(errorMessages.WRONG_VERIFICATION_CODE);
 
     await verificationCodesRepository.deleteCode({ email });
-    const user = await usersRepository.updateUser({ email, isConfirmed: true });
+    const user = await usersRepository.confirmUser(email);
 
     const userToken = tokenManager.generateToken(user.userId);
 
