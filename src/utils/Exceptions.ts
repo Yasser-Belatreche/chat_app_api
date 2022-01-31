@@ -15,4 +15,18 @@ const errorMessages = {
   CREDENTIALS_ERROR: "credentials error",
 };
 
-export { errorMessages };
+class InvalidEmail extends Error {}
+class InvalidPassword extends Error {}
+class UserIdNotSet extends Error {}
+class NameNotSet extends Error {}
+class CreatedAtNotSet extends Error {}
+class UserIdOrCreatedAtAlreadySet extends Error {}
+
+export {
+  InvalidEmail,
+  InvalidPassword,
+  UserIdNotSet,
+  CreatedAtNotSet,
+  NameNotSet,
+  UserIdOrCreatedAtAlreadySet,
+};

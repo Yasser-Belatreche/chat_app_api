@@ -8,7 +8,10 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon ./src/index.ts",
-    "test": "env DOTENV_CONFIG_PATH=.env.test TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/**/*.test.ts' -r dotenv/config"
+    "test:macro": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Domain/**/*.test.ts'",
+    "test:contract": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Adapters/**/*.test.ts'",
+    "test:acceptance": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/UseCases/**/*.test.ts'",
+    "test": "npm run test:acceptance && npm run test:macro && test:contract"
   },
   "repository": {
     "type": "git",
