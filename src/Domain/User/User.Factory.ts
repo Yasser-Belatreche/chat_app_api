@@ -12,7 +12,7 @@ type Dependencies = {
   idGenerator: IdGenerator;
 };
 
-interface IUser {
+export interface IUser {
   email: string;
   password: string;
   userId: string;
@@ -27,7 +27,7 @@ interface EmailAndPassword {
 }
 
 const makeUser = ({ idGenerator }: Dependencies) => {
-  return class implements IUser {
+  return class User implements IUser {
     private _email: string;
     private _password: string;
     private _userId?: string;

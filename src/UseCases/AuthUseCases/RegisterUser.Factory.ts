@@ -1,3 +1,5 @@
+import type { UsersRepository } from "../../Ports/DrivenPorts/persistence/persistence.interface";
+
 import { User } from "../../Domain/User/User";
 
 type Dependencies = {
