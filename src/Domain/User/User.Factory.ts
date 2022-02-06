@@ -6,6 +6,8 @@ import {
   NameNotSet,
   UserIdNotSet,
   UserIdOrCreatedAtAlreadySet,
+  NameNotValid,
+  NotConfirmedNotSet,
 } from "../../utils/Exceptions";
 
 type Dependencies = {
@@ -18,7 +20,8 @@ export interface IUser {
   userId: string;
   name: string;
   createdAt: string;
-  generateIdAndCreationTime: Function;
+  isConfirmed: boolean;
+  isANewRegistred: (name: string) => void;
 }
 
 interface EmailAndPassword {
@@ -33,6 +36,7 @@ const makeUser = ({ idGenerator }: Dependencies) => {
     private _userId?: string;
     private _name?: string;
     private _createdAt?: string;
+    private _isConfirmed?: boolean;
 
     constructor({ email, password }: EmailAndPassword) {
       email = this.trimAndLowerCase(email);
@@ -53,12 +57,18 @@ const makeUser = ({ idGenerator }: Dependencies) => {
       return this._password;
     }
 
+    public set password(v: string) {
+      if (!this.isValidPassword(v)) throw new InvalidPassword();
+      this._password = v;
+    }
+
     public get name(): string {
       if (!this._name) throw new NameNotSet();
       return this._name;
     }
 
     public set name(v: string) {
+      if (v.length < 4) throw new NameNotValid();
       this._name = this.trimAndLowerCase(v);
     }
 
@@ -80,12 +90,23 @@ const makeUser = ({ idGenerator }: Dependencies) => {
       this._createdAt = v;
     }
 
-    public generateIdAndCreationTime() {
-      if (this._userId || this._createdAt)
+    public get isConfirmed(): boolean {
+      if (this._isConfirmed === undefined) throw new NotConfirmedNotSet();
+      return this._isConfirmed;
+    }
+
+    public set isConfirmed(v: boolean) {
+      this._isConfirmed = v;
+    }
+
+    public isANewRegistred(name: string) {
+      if (this._userId || this._createdAt || this._name)
         throw new UserIdOrCreatedAtAlreadySet();
 
+      this.name = name;
       this._userId = idGenerator.generate();
       this._createdAt = new Date().toJSON();
+      this._isConfirmed = false;
     }
 
     private isValidEmail(e: string): boolean {

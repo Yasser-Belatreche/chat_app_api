@@ -20,7 +20,11 @@ class InvalidPassword extends Error {}
 class UserIdNotSet extends Error {}
 class NameNotSet extends Error {}
 class CreatedAtNotSet extends Error {}
+class NotConfirmedNotSet extends Error {}
 class UserIdOrCreatedAtAlreadySet extends Error {}
+class NameNotValid extends Error {}
+class InvalidCredentials extends Error {}
+class EmailAlreadyUsed extends Error {}
 
 export {
   InvalidEmail,
@@ -29,4 +33,8 @@ export {
   CreatedAtNotSet,
   NameNotSet,
   UserIdOrCreatedAtAlreadySet,
+  NameNotValid,
+  InvalidCredentials,
+  EmailAlreadyUsed,
+  NotConfirmedNotSet,
 };

@@ -11,7 +11,7 @@
     "test:macro": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Domain/**/*.test.ts'",
     "test:contract": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Adapters/**/*.test.ts'",
     "test:acceptance": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/UseCases/**/*.test.ts'",
-    "test": "npm run test:acceptance && npm run test:macro && test:contract"
+    "test": "npm run test:macro && npm run test:contract && npm run test:acceptance"
   },
   "repository": {
     "type": "git",

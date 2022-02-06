@@ -1,13 +1,21 @@
 import { expect } from "chai";
-import { idGenerator as idGeneratorFake } from "../../__fakes__/idGenerator";
 
-describe("idGenerator fake", () => {
+import { idGenerator as idGeneratorFake } from "../../__fakes__/dependencies/idGenerator";
+import { idGenerator as idGeneratorReal } from "../../../Adapters/DrivenAdapters/idGenerator/idGenerator";
+
+const handler = (idGenerator: typeof idGeneratorReal) => () => {
   it("calling generate should generate a random id everytime", () => {
-    expect(idGeneratorFake.generate())
-      .to.not.equal(idGeneratorFake.generate())
-      .to.not.equal(idGeneratorFake.generate())
-      .to.not.equal(idGeneratorFake.generate())
-      .to.not.equal(idGeneratorFake.generate())
-      .to.not.equal(idGeneratorFake.generate());
+    expect(idGenerator.generate())
+      .to.not.equal(idGenerator.generate())
+      .to.not.equal(idGenerator.generate())
+      .to.not.equal(idGenerator.generate())
+      .to.not.equal(idGenerator.generate())
+      .to.not.equal(idGenerator.generate());
   });
+};
+
+describe("idGenerator", () => {
+  describe("Fake", handler(idGeneratorFake));
+
+  describe("Real", handler(idGeneratorReal));
 });

@@ -1,10 +1,12 @@
-import type { UsersRepository } from "../../Ports/DrivenPorts/persistence/persistence.interface";
+import type {
+  WithPasswordManager,
+  WithUsersRespository,
+} from "../_utils_/dependencies.interfaces";
 
+import { EmailAlreadyUsed } from "../../utils/Exceptions";
 import { User } from "../../Domain/User/User";
 
-type Dependencies = {
-  usersRepository: UsersRepository;
-};
+type Dependencies = WithUsersRespository & WithPasswordManager;
 
 interface Args {
   name: string;
@@ -12,11 +14,18 @@ interface Args {
   password: string;
 }
 
-const makeRegisterUser = ({ usersRepository }: Dependencies) => {
+const makeRegisterUser = ({
+  usersRepository,
+  passwordManager,
+}: Dependencies) => {
   return async (args: Args) => {
     const user = new User({ email: args.email, password: args.password });
-    user.name = args.name;
-    user.generateIdAndCreationTime();
+    user.isANewRegistred(args.name);
+
+    user.password = passwordManager.hash(user.password);
+
+    const userInDb = await usersRepository.getByEmail(user.email);
+    if (userInDb) throw new EmailAlreadyUsed();
 
     return await usersRepository.add(user);
   };

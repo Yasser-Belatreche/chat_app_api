@@ -2,15 +2,17 @@ import { expect } from "chai";
 import faker from "faker";
 
 import { makeUser } from "../../Domain/User/User.Factory";
-import { getFakeDependencies } from "../__fakes__";
+import { getFakeDependencies } from "../__fakes__/dependencies";
+import { getFakeData } from "../__fakes__/data";
 
 const { idGenerator } = getFakeDependencies();
 const User = makeUser({ idGenerator });
 
 describe("User Entitiy", () => {
+  const { user } = getFakeData();
   const validEmailAndPassword = {
-    email: faker.internet.email(),
-    password: faker.internet.password(8),
+    email: user.email,
+    password: user.password,
   };
 
   it("should not have a user with unvalid email", () => {
@@ -70,32 +72,68 @@ describe("User Entitiy", () => {
     expect(user.name).to.equal(name.trim().toLowerCase());
   });
 
-  it("if the user is newly created, we generate a random id and set the createdAt to time using the method calling generateIdAndCreationTime()", async () => {
-    const delay = async (time: number) => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, time);
-      });
-    };
+  it("should not be able have a user with a short name (< 4)", () => {
+    const user = new User(validEmailAndPassword);
+    expect(() => (user.name = "nam"))
+      .to.throws()
+      .instanceOf(Error);
+  });
 
+  it("if the user is newly created, we generate a random id, set the createdAt to the current time, the name to the string argument and isConfirmed to false by calling isANewRegistred(name)", async () => {
     const firstUser = new User(validEmailAndPassword);
     const secondUser = new User(validEmailAndPassword);
+    const thirdUser = new User(validEmailAndPassword);
 
-    firstUser.generateIdAndCreationTime();
-    await delay(1);
-    secondUser.generateIdAndCreationTime();
+    firstUser.isANewRegistred("john");
+    await Promise.resolve("");
+    secondUser.isANewRegistred("smith");
+
+    expect(firstUser.name).to.equal("john");
+    expect(secondUser.name).to.equal("smith");
 
     expect(firstUser.createdAt)
       .to.be.a("string")
       .to.not.equal(secondUser.createdAt);
     expect(firstUser.userId).to.be.a("string").to.not.equal(secondUser.userId);
+
+    expect(() => thirdUser.isANewRegistred("hjs"))
+      .to.throw()
+      .instanceOf(Error);
+
+    expect(firstUser.isConfirmed).to.be.false.to.equal(secondUser.isConfirmed);
   });
 
-  it("attemp to call generateIdAndCreationTime() throw an error when the userId or createdAt are already set in the instance", async () => {
+  it("attemp to call isANewRegistred(name) throw an error when the userId, name or createdAt are already set in the instance", async () => {
     const user = new User(validEmailAndPassword);
     user.userId = "someId";
     user.createdAt = new Date().toJSON();
+    user.name = "johnSmith";
 
-    expect(() => user.generateIdAndCreationTime())
+    expect(() => user.isANewRegistred("mark"))
+      .to.throw()
+      .instanceOf(Error);
+  });
+
+  it("should be able to change the password with a valid one", () => {
+    const user = new User(validEmailAndPassword);
+    expect(user.password).to.not.equal("someValidpassword");
+
+    user.password = "someValidpassword";
+    expect(user.password).to.equal("someValidpassword");
+
+    expect(() => (user.password = "som"))
+      .to.throw()
+      .instanceOf(Error);
+  });
+
+  it("should not be able to get isCofirmed when it's not set", () => {
+    const firstUser = new User(validEmailAndPassword);
+    const secondUser = new User(validEmailAndPassword);
+
+    firstUser.isConfirmed = true;
+
+    expect(firstUser.isConfirmed).to.be.true;
+    expect(() => secondUser.isConfirmed)
       .to.throw()
       .instanceOf(Error);
   });
