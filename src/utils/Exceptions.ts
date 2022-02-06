@@ -25,6 +25,8 @@ class UserIdOrCreatedAtAlreadySet extends Error {}
 class NameNotValid extends Error {}
 class InvalidCredentials extends Error {}
 class EmailAlreadyUsed extends Error {}
+class UserNotExist extends Error {}
+class CannotSendEmail extends Error {}
 
 export {
   InvalidEmail,
@@ -37,4 +39,6 @@ export {
   InvalidCredentials,
   EmailAlreadyUsed,
   NotConfirmedNotSet,
+  UserNotExist,
+  CannotSendEmail,
 };

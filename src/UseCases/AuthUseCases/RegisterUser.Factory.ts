@@ -1,12 +1,12 @@
 import type {
   WithPasswordManager,
-  WithUsersRespository,
+  WithUsersRepository,
 } from "../_utils_/dependencies.interfaces";
 
 import { EmailAlreadyUsed } from "../../utils/Exceptions";
 import { User } from "../../Domain/User/User";
 
-type Dependencies = WithUsersRespository & WithPasswordManager;
+type Dependencies = WithUsersRepository & WithPasswordManager;
 
 interface Args {
   name: string;

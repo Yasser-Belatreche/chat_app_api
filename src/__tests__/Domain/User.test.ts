@@ -85,15 +85,12 @@ describe("User Entitiy", () => {
     const thirdUser = new User(validEmailAndPassword);
 
     firstUser.isANewRegistred("john");
-    await Promise.resolve("");
     secondUser.isANewRegistred("smith");
 
     expect(firstUser.name).to.equal("john");
     expect(secondUser.name).to.equal("smith");
 
-    expect(firstUser.createdAt)
-      .to.be.a("string")
-      .to.not.equal(secondUser.createdAt);
+    expect(new Date(firstUser.createdAt)).to.be.instanceOf(Date);
     expect(firstUser.userId).to.be.a("string").to.not.equal(secondUser.userId);
 
     expect(() => thirdUser.isANewRegistred("hjs"))

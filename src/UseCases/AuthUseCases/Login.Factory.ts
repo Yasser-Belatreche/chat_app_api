@@ -1,13 +1,13 @@
 import type {
   WithPasswordManager,
   WithTokenManager,
-  WithUsersRespository,
+  WithUsersRepository,
 } from "../_utils_/dependencies.interfaces";
 
 import { User } from "../../Domain/User/User";
 import { InvalidCredentials } from "../../utils/Exceptions";
 
-type Dependencies = WithUsersRespository &
+type Dependencies = WithUsersRepository &
   WithPasswordManager &
   WithTokenManager;
 
