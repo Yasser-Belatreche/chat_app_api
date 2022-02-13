@@ -21,7 +21,7 @@ const makeLogin = ({
   passwordManager,
   tokenManager,
 }: Dependencies) => {
-  return async (args: Args) => {
+  return async (args: Args): Promise<string> => {
     const userWantToLogin = new User(args);
     const userInDb = await usersRepository.getByEmail(userWantToLogin.email);
 

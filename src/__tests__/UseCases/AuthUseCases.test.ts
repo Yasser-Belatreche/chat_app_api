@@ -20,7 +20,11 @@ const {
   emailService,
 } = getFakeDependencies();
 
-const registerUser = makeRegisterUser({ usersRepository, passwordManager });
+const registerUser = makeRegisterUser({
+  usersRepository,
+  passwordManager,
+  tokenManager,
+});
 const login = makeLogin({ usersRepository, passwordManager, tokenManager });
 const sendConfirmationCode = makeSendConfirmationCode({
   usersRepository,
@@ -31,22 +35,31 @@ const confirmUser = makeConfirmUser({});
 
 describe("AuthUseCase", () => {
   describe("Login & Registration", () => {
-    it("should hash the password when registration", async () => {
+    it("should hash the password when registration and return a user Token", async () => {
       const user = fakeData.user;
 
-      const registeredUser = await registerUser(user);
+      const userToken = await registerUser(user);
 
-      expect(registeredUser.password)
+      const registeredUser = await usersRepository.getByEmail(
+        user.email.toLowerCase()
+      );
+
+      expect(registeredUser?.password)
         .to.be.a("string")
         .and.not.equal(user.password);
+      expect(userToken).to.be.a("string").to.include("Bearer ");
     });
 
     it("new registred users should have the isConfirmed to be false", async () => {
       const user = fakeData.user;
 
-      const registeredUser = await registerUser(user);
+      await registerUser(user);
 
-      expect(registeredUser.isConfirmed).to.be.false;
+      const registeredUser = await usersRepository.getByEmail(
+        user.email.toLowerCase()
+      );
+
+      expect(registeredUser?.isConfirmed).to.be.false;
     });
 
     it("should be able to login after registration", async () => {
@@ -63,10 +76,13 @@ describe("AuthUseCase", () => {
     it("should not be able to login with wrong password, or if the email does not exist", async () => {
       const user = fakeData.user;
 
-      const newUser = await registerUser(user);
+      await registerUser(user);
 
       await expect(
-        login({ email: newUser.email, password: "someWrongPassword" })
+        login({
+          email: user.email.toLowerCase(),
+          password: "someWrongPassword",
+        })
       ).to.be.rejected;
 
       await expect(
@@ -115,17 +131,17 @@ describe("AuthUseCase", () => {
         .be.rejected;
     });
 
-    it("user should be able to confirm himself using a correct code", async () => {
-      const userToken = await registerUser(fakeData.user);
+    // it("user should be able to confirm himself using a correct code", async () => {
+    //   const userToken = await registerUser(fakeData.user);
 
-      const code = await sendConfirmationCode({
-        email: user.email,
-      });
+    //   const code = await sendConfirmationCode({
+    //     email: user.email,
+    //   });
 
-      const confirmedUser = await confirmUser({ token: userToken, code });
+    //   const confirmedUser = await confirmUser({ authToken: userToken, code });
 
-      expect(confirmedUser.isConfirmed).to.be.true;
-    });
+    //   expect(confirmedUser.isConfirmed).to.be.true;
+    // });
   });
 });
 

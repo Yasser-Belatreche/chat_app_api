@@ -33,7 +33,7 @@ const makeConfirmationCode = () => {
 
       do {
         result = Math.floor(Math.random() * 10 ** 4);
-      } while (result < 1000 && result > 10000);
+      } while (result < 1000 && result > 9999);
 
       return result;
     }
