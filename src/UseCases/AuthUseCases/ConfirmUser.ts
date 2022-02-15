@@ -4,7 +4,8 @@ import type {
   WithUsersRepository,
 } from "../_utils_/dependencies.interfaces";
 
-import { UserNotExist, WrongConfirmationCode } from "./_utils_/Exceptions";
+import { UserNotExist } from "../../utils/Exceptions";
+import { WrongConfirmationCode } from "./_utils_/Exceptions";
 
 type Dependencies = WithTokenManager &
   WithUsersRepository &

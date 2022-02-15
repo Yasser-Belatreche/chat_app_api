@@ -5,7 +5,7 @@ import type {
 } from "../_utils_/dependencies.interfaces";
 
 import { ConfirmationCode } from "../../Domain/ConfirmationCode/ConfirmationCode";
-import { UserNotExist } from "./_utils_/Exceptions";
+import { UserNotExist } from "../../utils/Exceptions";
 import { getEmailConfirmationHtmlTemplate } from "./_utils_/emailConfirmationHtmlTemplate";
 
 type Dependencies = WithUsersRepository &

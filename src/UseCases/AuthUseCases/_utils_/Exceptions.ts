@@ -1,5 +1,4 @@
 const ERRORS = {
-  USER_NOT_EXIST: "user does not exist",
   WRONG_PASSWORD: "wrong password",
   USED_EMAIL: "email already used",
   WRONG_CONFIRMATION_CODE: "wrong confirmation code",
@@ -19,21 +18,10 @@ class EmailAlreadyUsed extends Error {
   }
 }
 
-class UserNotExist extends Error {
-  constructor() {
-    super(ERRORS.USER_NOT_EXIST);
-  }
-}
-
 class WrongConfirmationCode extends Error {
   constructor() {
     super(ERRORS.WRONG_CONFIRMATION_CODE);
   }
 }
 
-export {
-  InvalidCredentials,
-  EmailAlreadyUsed,
-  UserNotExist,
-  WrongConfirmationCode,
-};
+export { InvalidCredentials, EmailAlreadyUsed, WrongConfirmationCode };

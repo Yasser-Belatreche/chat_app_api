@@ -1,4 +1,5 @@
-import { IdGenerator } from "../../Ports/DrivenPorts/IdGenerator/IdGenerator.interface";
+import type { WithIdGenerator } from "../_utils_/Dependencies.interfaces";
+
 import {
   CreatedAtNotSet,
   InvalidEmail,
@@ -10,9 +11,7 @@ import {
   isConfirmedNotSet,
 } from "./_utils_/Exceptions";
 
-type Dependencies = {
-  idGenerator: IdGenerator;
-};
+type Dependencies = WithIdGenerator;
 
 export interface IUser {
   email: string;

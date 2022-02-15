@@ -1,8 +1,9 @@
 import { expect } from "chai";
+
 import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser";
 import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser";
 import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode";
-
+import { makeGetMessages } from "../../UseCases/MessagesUseCases/GetMessages";
 import { makeSendMessage } from "../../UseCases/MessagesUseCases/SendMessage";
 
 import { getFakeData } from "../__fakes__/data";
@@ -15,6 +16,7 @@ const {
   usersRepository,
   confirmationCodesRepository,
   emailService,
+  messagesRepository,
 } = getFakeDependencies();
 
 const registerUser = makeRegisterUser({
@@ -33,19 +35,57 @@ const confirmUser = makeConfirmUser({
   usersRepository,
 });
 
-const sendMessage = makeSendMessage({});
+const sendMessage = makeSendMessage({
+  tokenManager,
+  usersRepository,
+  messagesRepository,
+});
+const getMessages = makeGetMessages({ messagesRepository, tokenManager });
 
 describe("MessagesUseCases", () => {
   describe("Send Messages", () => {
     it("should not be able to send a message to a non existing user", async () => {
-      const [authUser, chatParticipant] = await registerAndGetTwoUsers();
-
+      const [authUser] = await registerAndGetTwoUsers();
       const authToken = authUser.token;
-      const to = chatParticipant.userId;
+      const receiverId = "idNotExist";
 
       await expect(
-        sendMessage({ authToken, to: "idNotExist", message: "hello there !" })
+        sendMessage({ authToken, receiverId, content: "hello there !" })
       ).to.be.rejected;
+    });
+
+    it("should not be able to send an empty message", async () => {
+      const [sender, receiver] = await registerAndGetTwoUsers();
+      const authToken = sender.token;
+      const receiverId = receiver.userId;
+
+      await expect(sendMessage({ authToken, receiverId, content: "" })).to.be
+        .rejected;
+    });
+
+    it("should send the message to the target user when everything is ok", async () => {
+      const [sender, receiver] = await registerAndGetTwoUsers();
+
+      const validArgs = {
+        authToken: sender.token,
+        receiverId: receiver.userId,
+        content: "hello bro !!",
+      };
+
+      await expect(sendMessage(validArgs)).to.be.fulfilled;
+
+      const messagesList = await getMessages({
+        authToken: validArgs.authToken,
+        chatParticipantId: receiver.userId,
+        numOfChunk: 1,
+        numOfMessagesPerChunk: 1,
+      });
+
+      expect(messagesList[0]).to.have.property("content", validArgs.content);
+      expect(messagesList[0]).to.have.property(
+        "receiverId",
+        validArgs.receiverId
+      );
     });
   });
 });
