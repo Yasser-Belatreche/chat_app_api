@@ -1,8 +1,8 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
-import { makeLogin } from "../../UseCases/AuthUseCases/Login.Factory";
-import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser.Factory";
+import { makeLogin } from "../../UseCases/AuthUseCases/Login";
+import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser";
 import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode";
 import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser";
 
