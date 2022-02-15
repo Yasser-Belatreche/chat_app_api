@@ -14,6 +14,12 @@ const confirmationCodesRepository: ConfirmationCodesRepository = {
   find: async (email) => {
     return repository.get(email);
   },
+  delete: async (email) => {
+    const codeToDelete = repository.get(email);
+    repository.delete(email);
+
+    return codeToDelete;
+  },
 };
 
 export { confirmationCodesRepository };

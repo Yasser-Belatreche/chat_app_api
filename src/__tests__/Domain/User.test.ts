@@ -100,11 +100,10 @@ describe("User Entitiy", () => {
     expect(firstUser.isConfirmed).to.be.false.to.equal(secondUser.isConfirmed);
   });
 
-  it("attemp to call isANewRegistred(name) throw an error when the userId, name or createdAt are already set in the instance", async () => {
+  it("attemp to call isANewRegistred(name) two times throw an error (or when the userId, name or createdAt are already set in the instance)", async () => {
     const user = new User(validEmailAndPassword);
-    user.userId = "someId";
-    user.createdAt = new Date().toJSON();
-    user.name = "johnSmith";
+
+    user.isANewRegistred("johnSmith");
 
     expect(() => user.isANewRegistred("mark"))
       .to.throw()

@@ -7,9 +7,9 @@ import { getFakeData } from "../__fakes__/data";
 const ConfirmationCode = makeConfirmationCode();
 
 describe("ConfirmationCode entity", () => {
-  it("should generate a random 4 degit Code for each email, and attach a createdAt value", async () => {
-    const user = getFakeData().user;
+  const { user } = getFakeData();
 
+  it("should generate a random 4 degit Code for each email, and attach a createdAt value", async () => {
     const ConfirmationCode1 = new ConfirmationCode(user.email);
     const ConfirmationCode2 = new ConfirmationCode(user.email);
     const ConfirmationCode3 = new ConfirmationCode(user.email);

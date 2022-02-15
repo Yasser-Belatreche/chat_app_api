@@ -5,7 +5,7 @@ import type {
 } from "../_utils_/dependencies.interfaces";
 
 import { User } from "../../Domain/User/User";
-import { InvalidCredentials } from "../../utils/Exceptions";
+import { InvalidCredentials } from "./_utils_/Exceptions";
 
 type Dependencies = WithUsersRepository &
   WithPasswordManager &

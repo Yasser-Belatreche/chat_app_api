@@ -4,7 +4,7 @@ import type {
   WithUsersRepository,
 } from "../_utils_/dependencies.interfaces";
 
-import { EmailAlreadyUsed } from "../../utils/Exceptions";
+import { EmailAlreadyUsed } from "./_utils_/Exceptions";
 import { User } from "../../Domain/User/User";
 
 type Dependencies = WithUsersRepository &

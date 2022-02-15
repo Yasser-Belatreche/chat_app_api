@@ -4,10 +4,8 @@ const emailService: EmailService = {
   send: async ({ to }) => {
     try {
       if (!to) throw "";
-
-      return { success: true };
     } catch (error) {
-      return { success: false };
+      throw new Error(error as any);
     }
   },
 };

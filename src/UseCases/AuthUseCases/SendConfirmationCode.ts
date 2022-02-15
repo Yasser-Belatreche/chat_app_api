@@ -5,7 +5,7 @@ import type {
 } from "../_utils_/dependencies.interfaces";
 
 import { ConfirmationCode } from "../../Domain/ConfirmationCode/ConfirmationCode";
-import { CannotSendEmail, UserNotExist } from "../../utils/Exceptions";
+import { UserNotExist } from "./_utils_/Exceptions";
 import { getEmailConfirmationHtmlTemplate } from "./_utils_/emailConfirmationHtmlTemplate";
 
 type Dependencies = WithUsersRepository &
@@ -32,15 +32,10 @@ const makeSendConfirmationCode = ({
     if (codeFromDb) await confirmationCodesRepository.update(confirmationCode);
     else await confirmationCodesRepository.add(confirmationCode);
 
-    const HTMLTemplate = getEmailConfirmationHtmlTemplate(
-      confirmationCode.code
-    );
-    const { success } = await emailService.send({
+    await emailService.send({
       to: user.email,
-      HTMLTemplate,
+      HTMLTemplate: getEmailConfirmationHtmlTemplate(confirmationCode.code),
     });
-
-    if (!success) throw new CannotSendEmail();
 
     return confirmationCode.code;
   };

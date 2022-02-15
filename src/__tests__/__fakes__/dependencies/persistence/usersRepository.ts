@@ -15,6 +15,11 @@ const usersRepository: UsersRepository = {
   getByEmail: async (email) => {
     return [...repository.values()].find((value) => value.email === email);
   },
+
+  update: async (user) => {
+    repository.set(user.userId, user);
+    return repository.get(user.userId);
+  },
 };
 
 export { usersRepository };

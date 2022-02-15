@@ -31,7 +31,11 @@ const sendConfirmationCode = makeSendConfirmationCode({
   confirmationCodesRepository,
   emailService,
 });
-const confirmUser = makeConfirmUser({});
+const confirmUser = makeConfirmUser({
+  tokenManager,
+  usersRepository,
+  confirmationCodesRepository,
+});
 
 describe("AuthUseCase", () => {
   describe("Login & Registration", () => {
@@ -124,27 +128,61 @@ describe("AuthUseCase", () => {
   });
 
   describe("User Confirmation", () => {
-    const user = fakeData.user;
-
     it("should not send a verification code to an email that doesn't exist", async () => {
-      await expect(sendConfirmationCode({ email: "noExisting@email.com" })).to
+      await expect(sendConfirmationCode({ email: "notExisting@email.com" })).to
         .be.rejected;
     });
 
-    // it("user should be able to confirm himself using a correct code", async () => {
-    //   const userToken = await registerUser(fakeData.user);
+    it("user with unvalid token should not be able to confirm himself", async () => {
+      await expect(confirmUser({ authToken: "someInvalidToken", code: 1234 }))
+        .to.be.rejected;
+    });
 
-    //   const code = await sendConfirmationCode({
-    //     email: user.email,
-    //   });
+    it("should not confirm a user with wrong confirmation code", async () => {
+      const token = await registerUser(fakeData.user);
 
-    //   const confirmedUser = await confirmUser({ authToken: userToken, code });
+      await expect(confirmUser({ authToken: token, code: 1234 })).to.be
+        .rejected;
+    });
 
-    //   expect(confirmedUser.isConfirmed).to.be.true;
-    // });
+    it("user should be able to confirm himself using a correct code, and delete that code after that", async () => {
+      const { user } = fakeData;
+
+      const userToken = await registerUser(user);
+
+      const code = await sendConfirmationCode({
+        email: user.email.toLowerCase(),
+      });
+
+      await confirmUser({ authToken: userToken, code });
+
+      const confirmedUser = await usersRepository.getByEmail(
+        user.email.toLowerCase()
+      );
+
+      expect(confirmedUser?.isConfirmed).to.be.true;
+      expect(confirmedUser?.email).to.equal(user.email.toLowerCase());
+
+      const codeInDb = await confirmationCodesRepository.find(
+        user.email.toLowerCase()
+      );
+      expect(codeInDb).to.be.undefined;
+    });
+
+    it("should be able to generate a new confirmation code if the user doesn't receive the first code", async () => {
+      const { user } = fakeData;
+      const email = user.email.toLowerCase();
+
+      await registerUser(user);
+
+      const firstCode = await sendConfirmationCode({ email });
+      const secondCode = await sendConfirmationCode({ email });
+
+      expect(firstCode).to.not.equal(secondCode);
+
+      await expect(
+        confirmationCodesRepository.find(email)
+      ).to.eventually.have.property("code", secondCode);
+    });
   });
 });
-
-/**
- * 2 - should be able to confirm a user
- */

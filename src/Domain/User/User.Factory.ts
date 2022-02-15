@@ -7,8 +7,8 @@ import {
   UserIdNotSet,
   UserIdOrCreatedAtAlreadySet,
   NameNotValid,
-  NotConfirmedNotSet,
-} from "../../utils/Exceptions";
+  isConfirmedNotSet,
+} from "./_utils_/Exceptions";
 
 type Dependencies = {
   idGenerator: IdGenerator;
@@ -77,21 +77,13 @@ const makeUser = ({ idGenerator }: Dependencies) => {
       return this._userId;
     }
 
-    public set userId(v: string) {
-      this._userId = v;
-    }
-
     public get createdAt(): string {
       if (!this._createdAt) throw new CreatedAtNotSet();
       return this._createdAt;
     }
 
-    public set createdAt(v: string) {
-      this._createdAt = v;
-    }
-
     public get isConfirmed(): boolean {
-      if (this._isConfirmed === undefined) throw new NotConfirmedNotSet();
+      if (this._isConfirmed === undefined) throw new isConfirmedNotSet();
       return this._isConfirmed;
     }
 

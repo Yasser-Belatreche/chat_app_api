@@ -8,12 +8,14 @@ import { confirmationCodesRepository as fakeConfirmationCodesRepository } from "
 
 chai.use(chaiAsPromised);
 
+const fakeData = getFakeData();
+
 const handler =
   (confirmationCodesRepository: typeof fakeConfirmationCodesRepository) =>
   () => {
-    const user = getFakeData().user;
-
     it("should save a confirmationCode", async () => {
+      const { user } = fakeData;
+
       const confirmationCode = new ConfirmationCode(user.email);
 
       await confirmationCodesRepository.add(confirmationCode);
@@ -23,6 +25,8 @@ const handler =
     });
 
     it("should update a confirmationCode", async () => {
+      const { user } = fakeData;
+
       const confirmationCode = new ConfirmationCode(user.email);
       await confirmationCodesRepository.add(confirmationCode);
 
@@ -32,6 +36,20 @@ const handler =
       await expect(
         confirmationCodesRepository.find(confirmationCode.email)
       ).to.eventually.equal(updatedCode);
+    });
+
+    it("should be able to delete a confirmationCode, and return it", async () => {
+      const { user } = fakeData;
+
+      const confirmationCode = new ConfirmationCode(user.email);
+      await confirmationCodesRepository.add(confirmationCode);
+
+      await expect(
+        confirmationCodesRepository.delete(confirmationCode.email)
+      ).to.eventually.have.property("email", confirmationCode.email);
+
+      await expect(confirmationCodesRepository.find(confirmationCode.email)).to
+        .eventually.be.undefined;
     });
   };
 

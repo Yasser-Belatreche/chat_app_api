@@ -48,6 +48,22 @@ const handler = (usersRepository: typeof fakeUsersRepository) => () => {
 
     expect(foundUser).to.equal(user);
   });
+
+  it("should update a user", async () => {
+    const user = getNewUser();
+    await usersRepository.add(user);
+
+    const updatedInfo = { isConfirmed: true, name: "yasser" };
+    user.isConfirmed = updatedInfo.isConfirmed;
+    user.name = updatedInfo.name;
+
+    await usersRepository.update(user);
+
+    const userInDb = await usersRepository.getById(user.userId);
+
+    expect(userInDb?.isConfirmed).to.equal(updatedInfo.isConfirmed);
+    expect(userInDb?.name).to.equal(updatedInfo.name);
+  });
 };
 
 describe("usersRepository", () => {
