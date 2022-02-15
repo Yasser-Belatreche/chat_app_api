@@ -37,7 +37,7 @@ const confirmUser = makeConfirmUser({
   confirmationCodesRepository,
 });
 
-describe("AuthUseCase", () => {
+describe("AuthUseCases", () => {
   describe("Login & Registration", () => {
     it("should hash the password when registration and return a user Token", async () => {
       const user = fakeData.user;
