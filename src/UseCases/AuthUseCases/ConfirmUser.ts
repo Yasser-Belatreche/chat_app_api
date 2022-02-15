@@ -29,10 +29,10 @@ const makeConfirmUser = ({
     const codeInDb = await confirmationCodesRepository.find(user.email);
     if (codeInDb?.code !== code) throw new WrongConfirmationCode();
 
+    await confirmationCodesRepository.delete(user.email);
+
     user.isConfirmed = true;
     const updatedUser = await usersRepository.update(user);
-
-    await confirmationCodesRepository.delete(user.email);
 
     return updatedUser;
   };

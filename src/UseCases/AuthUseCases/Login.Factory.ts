@@ -23,15 +23,14 @@ const makeLogin = ({
 }: Dependencies) => {
   return async (args: Args): Promise<string> => {
     const userWantToLogin = new User(args);
-    const userInDb = await usersRepository.getByEmail(userWantToLogin.email);
 
+    const userInDb = await usersRepository.getByEmail(userWantToLogin.email);
     if (!userInDb) throw new InvalidCredentials();
 
     const isCorrectPassword = passwordManager.isHashMatchLiteral({
       hash: userInDb.password,
       literal: userWantToLogin.password,
     });
-
     if (!isCorrectPassword) throw new InvalidCredentials();
 
     const token = tokenManager.generateToken(userInDb.userId);

@@ -25,7 +25,6 @@ const makeRegisterUser = ({
   return async (args: Args): Promise<string> => {
     const user = new User({ email: args.email, password: args.password });
     user.isANewRegistred(args.name);
-
     user.password = passwordManager.hash(user.password);
 
     const userInDb = await usersRepository.getByEmail(user.email);
