@@ -1,9 +1,9 @@
 import type { Args, Dependencies } from "./ConfirmUser.types";
 import type { UserInfo } from "../../_utils_/types";
 
-import { UserNotExist } from "../../../utils/Exceptions";
 import { WrongConfirmationCode } from "../_utils_/Exceptions";
 import { getUserInfoFromClass } from "../../_utils_/getRegularInfoFromClasses";
+import { UserNotExist } from "../../_utils_/Exceptions";
 
 const makeConfirmUser = ({
   tokenManager,

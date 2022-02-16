@@ -4,8 +4,7 @@ import type { IMessage } from "../../../Domain/Message/Message.Factory";
 import type { MessageInfo } from "../_utils_/types";
 
 import { Message } from "../../../Domain/Message/Message";
-import { UserNotExist } from "../../../utils/Exceptions";
-import { UserNotConfirmed } from "../../_utils_/Exceptions";
+import { UserNotConfirmed, UserNotExist } from "../../_utils_/Exceptions";
 import { getMessageInfoFromClass } from "../_utils_/getMessagesInfoFromClasses";
 
 const makeSendMessage = ({
