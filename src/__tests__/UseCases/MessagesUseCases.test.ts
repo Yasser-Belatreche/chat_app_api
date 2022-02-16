@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import Sinon from "sinon";
 
 import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser/ConfirmUser";
 import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser/RegisterUser";
@@ -17,6 +18,7 @@ const {
   confirmationCodesRepository,
   emailService,
   messagesRepository,
+  notificationsManager,
 } = getFakeDependencies();
 
 const registerUser = makeRegisterUser({
@@ -39,11 +41,17 @@ const sendMessage = makeSendMessage({
   tokenManager,
   usersRepository,
   messagesRepository,
+  notificationsManager,
 });
 const getMessages = makeGetMessages({ messagesRepository, tokenManager });
 
 describe("MessagesUseCases", () => {
-  describe("Sending and Getting Messages", () => {
+  describe("Sending & Getting Messages", () => {
+    const newMessageNotificationSpy = Sinon.spy(
+      notificationsManager,
+      "newMessage"
+    );
+
     it("should not be able to send a message to a non existing user", async () => {
       const [authUser] = await registerAndGetTwoUsers();
       const authToken = authUser.token;
@@ -93,6 +101,7 @@ describe("MessagesUseCases", () => {
       };
 
       await expect(sendMessage(validArgs)).to.be.fulfilled;
+      expect(newMessageNotificationSpy.calledOnce).to.be.true;
 
       const messagesList = await getMessages({
         authToken: validArgs.authToken,

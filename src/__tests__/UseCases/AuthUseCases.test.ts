@@ -8,6 +8,7 @@ import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser/Confirm
 
 import { getFakeData } from "../__fakes__/data";
 import { getFakeDependencies } from "../__fakes__/dependencies";
+import Sinon from "sinon";
 
 chai.use(chaiAsPromised);
 
@@ -107,7 +108,7 @@ describe("AuthUseCases", () => {
       ).to.be.rejected;
     });
 
-    it("each user should have a unique token after login", async () => {
+    it("each user should get a unique token after login", async () => {
       const firstUser = fakeData.user;
       const secondUser = fakeData.user;
 
@@ -128,9 +129,12 @@ describe("AuthUseCases", () => {
   });
 
   describe("User Confirmation", () => {
+    const sendEmailSpy = Sinon.spy(emailService, "send");
+
     it("should not send a verification code to an email that doesn't exist", async () => {
       await expect(sendConfirmationCode({ email: "notExisting@email.com" })).to
         .be.rejected;
+      expect(sendEmailSpy.calledOnce).to.be.false;
     });
 
     it("user with unvalid token should not be able to confirm himself", async () => {
@@ -160,6 +164,7 @@ describe("AuthUseCases", () => {
         user.email.toLowerCase()
       );
 
+      expect(sendEmailSpy.calledOnce).to.be.true;
       expect(confirmedUser?.isConfirmed).to.be.true;
       expect(confirmedUser?.email).to.equal(user.email.toLowerCase());
 

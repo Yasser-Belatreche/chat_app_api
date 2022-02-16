@@ -1,5 +1,6 @@
 import { emailService } from "./emailService";
 import { idGenerator } from "./idGenerator";
+import { notificationsManager } from "./notificationsManager";
 import { passwordManager } from "./passwordManager";
 import { confirmationCodesRepository } from "./persistence/confirmationCodesRepository";
 import { messagesRepository } from "./persistence/messagesRepository";
@@ -14,6 +15,7 @@ const getFakeDependencies = () => ({
   confirmationCodesRepository,
   emailService,
   messagesRepository,
+  notificationsManager,
 });
 
 export { getFakeDependencies };

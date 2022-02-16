@@ -18,7 +18,7 @@ export interface ConfirmationCodesRepository {
   ) => Promise<IConfirmationCode | undefined>;
 }
 
-interface ToGetMessages {
+interface GetMessagesArgs {
   /**
    * first user id
    */
@@ -34,5 +34,5 @@ interface ToGetMessages {
 
 export interface MessagesRepository {
   add: (message: IMessage) => Promise<IMessage>;
-  getMessages: (args: ToGetMessages) => Promise<IMessage[]>;
+  getMessages: (args: GetMessagesArgs) => Promise<IMessage[]>;
 }

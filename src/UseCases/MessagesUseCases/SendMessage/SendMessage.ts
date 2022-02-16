@@ -9,6 +9,7 @@ const makeSendMessage = ({
   tokenManager,
   usersRepository,
   messagesRepository,
+  notificationsManager,
 }: Dependencies) => {
   return async ({
     authToken,
@@ -30,6 +31,19 @@ const makeSendMessage = ({
     });
 
     const newMessage = await messagesRepository.add(message);
+
+    await notificationsManager.newMessage({
+      receiverId: newMessage.receiverId,
+      message: {
+        messageId: newMessage.messageId,
+        content: newMessage.content,
+        createdAt: newMessage.createdAt,
+        sender: {
+          userId: sender.userId,
+          name: sender.name,
+        },
+      },
+    });
 
     return {
       messageId: newMessage.messageId,
