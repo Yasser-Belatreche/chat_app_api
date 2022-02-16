@@ -1,5 +1,6 @@
 import type { Args, Dependencies } from "./GetMessages.types";
 import type { MessageInfo } from "../_utils_/types";
+import { getMessagesInfoFromClasses } from "../_utils_/getMessagesInfoFromClasses";
 
 const makeGetMessages = ({
   messagesRepository,
@@ -20,14 +21,7 @@ const makeGetMessages = ({
       numOfMessagesPerChunk,
     });
 
-    return messagesList.map((message) => ({
-      messageId: message.messageId,
-      senderId: message.senderId,
-      receiverId: message.receiverId,
-      content: message.content,
-      seen: message.seen,
-      createdAt: message.createdAt,
-    }));
+    return getMessagesInfoFromClasses(messagesList);
   };
 };
 
