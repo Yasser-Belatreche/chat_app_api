@@ -10,7 +10,7 @@ const handler = (passwordManager: typeof fakePasswordManager) => () => {
   });
 
   it("should check if the password match the hashed", () => {
-    [...Array(10)].forEach(() => {
+    for (let i = 0; i < 10; i++) {
       const password = `${Math.floor(Math.random()) * 10 ** 7}`;
       const hash = passwordManager.hash(password);
 
@@ -23,7 +23,7 @@ const handler = (passwordManager: typeof fakePasswordManager) => () => {
           hash,
         })
       ).to.be.false;
-    });
+    }
   });
 };
 

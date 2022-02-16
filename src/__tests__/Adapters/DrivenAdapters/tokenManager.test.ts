@@ -18,12 +18,12 @@ const handler = (tokenManager: typeof fakeTokenManager) => () => {
   });
 
   it("should decode the token and return his value", () => {
-    [...Array(10)].forEach(() => {
+    for (let i = 0; i < 10; i++) {
       const value = Math.floor(Math.random() * 10 ** 10).toString();
       const token = tokenManager.generateToken(value);
 
       expect(tokenManager.decode(token)).to.equal(value);
-    });
+    }
   });
 };
 

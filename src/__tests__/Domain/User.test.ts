@@ -90,7 +90,7 @@ describe("User Entitiy", () => {
     expect(firstUser.name).to.equal("john");
     expect(secondUser.name).to.equal("smith");
 
-    expect(new Date(firstUser.createdAt)).to.be.instanceOf(Date);
+    expect(() => new Date(firstUser.createdAt)).to.not.throw();
     expect(firstUser.userId).to.be.a("string").to.not.equal(secondUser.userId);
 
     expect(() => thirdUser.isANewRegistred("hjs"))
@@ -100,7 +100,7 @@ describe("User Entitiy", () => {
     expect(firstUser.isConfirmed).to.be.false.to.equal(secondUser.isConfirmed);
   });
 
-  it("attemp to call isANewRegistred(name) two times throw an error (or when the userId, name or createdAt are already set in the instance)", async () => {
+  it("can't regenerate the user basic informations (id, createdAt) after setting them", async () => {
     const user = new User(validEmailAndPassword);
 
     user.isANewRegistred("johnSmith");

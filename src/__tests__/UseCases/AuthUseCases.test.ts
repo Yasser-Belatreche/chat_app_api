@@ -80,15 +80,12 @@ describe("AuthUseCases", () => {
 
     it("should not be able to login with wrong password, or if the email does not exist", async () => {
       const user = fakeData.user;
+      const email = user.email.toLowerCase();
 
       await registerUser(user);
 
-      await expect(
-        login({
-          email: user.email.toLowerCase(),
-          password: "someWrongPassword",
-        })
-      ).to.be.rejected;
+      await expect(login({ email, password: "someWrongPassword" })).to.be
+        .rejected;
 
       await expect(
         login({ email: "doesnNotExist@gmail.com", password: user.password })

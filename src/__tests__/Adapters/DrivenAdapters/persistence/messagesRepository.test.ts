@@ -34,9 +34,8 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
 
   describe("Getting Messages", () => {
     before(async () => {
-      let i: number = 1;
-      while (i <= 20)
-        await messagesRepository.add(getNewMessage((i++).toString()));
+      for (let i = 1; i <= 20; i++)
+        await messagesRepository.add(getNewMessage(i.toString()));
     });
 
     it("should get the latest 20 messages (by default)", async () => {
@@ -84,13 +83,12 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
       const receiversIds = ["4", "5", "6"];
 
       sendersIds.forEach(async (senderId, index) => {
-        await messagesRepository.add(
-          new Message({
-            content: "hello friend",
-            senderId,
-            receiverId: receiversIds[index],
-          })
-        );
+        const args = {
+          content: "hello friend",
+          senderId,
+          receiverId: receiversIds[index],
+        };
+        await messagesRepository.add(new Message(args));
       });
 
       sendersIds.forEach(async (senderId, index) => {
