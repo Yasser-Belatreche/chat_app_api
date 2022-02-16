@@ -1,20 +1,7 @@
-import type {
-  WithPasswordManager,
-  WithTokenManager,
-  WithUsersRepository,
-} from "../_utils_/dependencies.interfaces";
+import type { Args, Dependencies } from "./Login.types";
 
-import { User } from "../../Domain/User/User";
-import { InvalidCredentials } from "./_utils_/Exceptions";
-
-type Dependencies = WithUsersRepository &
-  WithPasswordManager &
-  WithTokenManager;
-
-interface Args {
-  email: string;
-  password: string;
-}
+import { User } from "../../../Domain/User/User";
+import { InvalidCredentials } from "../_utils_/Exceptions";
 
 const makeLogin = ({
   usersRepository,

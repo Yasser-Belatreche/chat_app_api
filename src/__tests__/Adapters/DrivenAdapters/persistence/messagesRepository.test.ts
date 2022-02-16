@@ -15,65 +15,95 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
     });
   };
 
-  it("should be able to add a message", async () => {
-    const message = getNewMessage();
+  describe("Adding a message", () => {
+    it("should add a message", async () => {
+      const message = getNewMessage();
 
-    await messagesRepository.add(message);
+      await messagesRepository.add(message);
 
-    const messagesList = await messagesRepository.getMessages({
-      between: message.receiverId,
-      and: message.senderId,
+      const messagesList = await messagesRepository.getMessages({
+        between: message.receiverId,
+        and: message.senderId,
+      });
+
+      expect(messagesList[0].content).to.equal(message.content);
+      expect(messagesList[0].senderId).to.equal(message.senderId);
+      expect(messagesList[0].receiverId).to.equal(message.receiverId);
     });
-
-    expect(messagesList[0].content).to.equal(message.content);
-    expect(messagesList[0].senderId).to.equal(message.senderId);
-    expect(messagesList[0].receiverId).to.equal(message.receiverId);
   });
 
-  it("should return the latest 20 messages", async () => {
-    [...Array(30)].forEach(async (_, index) => {
-      await messagesRepository.add(getNewMessage(index.toString()));
+  describe("Getting Messages", () => {
+    before(async () => {
+      let i: number = 1;
+      while (i <= 20)
+        await messagesRepository.add(getNewMessage((i++).toString()));
     });
 
-    const messagesList = await messagesRepository.getMessages({
-      between: senderId,
-      and: receiverId,
+    it("should get the latest 20 messages (by default)", async () => {
+      const messagesList = await messagesRepository.getMessages({
+        between: senderId,
+        and: receiverId,
+      });
+
+      const length = messagesList.length;
+
+      expect(length).to.equal(20);
+      expect(messagesList[0]).to.have.property("content", "20");
+      expect(messagesList[length - 1]).to.have.property("content", "1");
     });
 
-    expect(messagesList.length).to.equal(20);
-  });
+    it("should be able to change the max number of messages returned", async () => {
+      const messagesList = await messagesRepository.getMessages({
+        between: senderId,
+        and: receiverId,
+        numOfMessagesPerChunk: 10,
+      });
+      const length = messagesList.length;
 
-  it("should be able to change the max number of messages returned", async () => {
-    [...Array(30)].forEach(async (_, index) => {
-      await messagesRepository.add(getNewMessage(index.toString()));
+      expect(length).to.equal(10);
+      expect(messagesList[0]).to.have.property("content", "20");
+      expect(messagesList[length - 1]).to.have.property("content", "11");
     });
 
-    const messagesList = await messagesRepository.getMessages({
-      between: senderId,
-      and: receiverId,
-      numOfMessagesPerChunk: 10,
+    it("should be able to change the messages chunk number", async () => {
+      const messagesList = await messagesRepository.getMessages({
+        between: senderId,
+        and: receiverId,
+        numOfMessagesPerChunk: 10,
+        numOfChunk: 2,
+      });
+      const length = messagesList.length;
+
+      expect(length).to.equal(10);
+      expect(messagesList[0]).to.have.property("content", "10");
+      expect(messagesList[length - 1]).to.have.property("content", "1");
     });
 
-    expect(messagesList.length).to.equal(10);
-  });
+    it("should get just the messages between the two target users", async () => {
+      const sendersIds = ["1", "2", "3"];
+      const receiversIds = ["4", "5", "6"];
 
-  it("should be able to get the second, third.. chunk of messages, and each chunk contain a customisable number of messages", async () => {
-    [...Array(60)].forEach(async (_, index) => {
-      await messagesRepository.add(getNewMessage(index.toString()));
+      sendersIds.forEach(async (senderId, index) => {
+        await messagesRepository.add(
+          new Message({
+            content: "hello friend",
+            senderId,
+            receiverId: receiversIds[index],
+          })
+        );
+      });
+
+      sendersIds.forEach(async (senderId, index) => {
+        const messagesList = await messagesRepository.getMessages({
+          between: senderId,
+          and: receiversIds[index],
+        });
+        messagesList.forEach((message) => {
+          expect(message).to.have.property("senderId", senderId);
+          expect(message).to.have.property("receiverId", receiversIds[index]);
+        });
+      });
     });
-
-    const messagesList = await messagesRepository.getMessages({
-      between: senderId,
-      and: receiverId,
-      numOfMessagesPerChunk: 30,
-      numOfChunk: 2,
-    });
-
-    expect(messagesList[0]).to.have.property("content", "30");
-    expect(messagesList[messagesList.length - 1]).to.have.property(
-      "content",
-      "60"
-    );
   });
 };
 

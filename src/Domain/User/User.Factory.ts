@@ -21,6 +21,7 @@ export interface IUser {
   createdAt: string;
   isConfirmed: boolean;
   isANewRegistred: (name: string) => void;
+  confirm: () => void;
 }
 
 interface EmailAndPassword {
@@ -86,10 +87,6 @@ const makeUser = ({ idGenerator }: Dependencies) => {
       return this._isConfirmed;
     }
 
-    public set isConfirmed(v: boolean) {
-      this._isConfirmed = v;
-    }
-
     public isANewRegistred(name: string) {
       if (this._userId || this._createdAt || this._name)
         throw new UserIdOrCreatedAtAlreadySet();
@@ -98,6 +95,10 @@ const makeUser = ({ idGenerator }: Dependencies) => {
       this._userId = idGenerator.generate();
       this._createdAt = new Date().toJSON();
       this._isConfirmed = false;
+    }
+
+    public confirm() {
+      this._isConfirmed = true;
     }
 
     private isValidEmail(e: string): boolean {

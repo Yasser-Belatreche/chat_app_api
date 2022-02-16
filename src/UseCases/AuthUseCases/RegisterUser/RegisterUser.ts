@@ -1,21 +1,7 @@
-import type {
-  WithPasswordManager,
-  WithTokenManager,
-  WithUsersRepository,
-} from "../_utils_/dependencies.interfaces";
+import type { Args, Dependencies } from "./RegsiterUser.types";
 
-import { EmailAlreadyUsed } from "./_utils_/Exceptions";
-import { User } from "../../Domain/User/User";
-
-type Dependencies = WithUsersRepository &
-  WithPasswordManager &
-  WithTokenManager;
-
-interface Args {
-  name: string;
-  email: string;
-  password: string;
-}
+import { EmailAlreadyUsed } from "../_utils_/Exceptions";
+import { User } from "../../../Domain/User/User";
 
 const makeRegisterUser = ({
   usersRepository,
@@ -24,11 +10,12 @@ const makeRegisterUser = ({
 }: Dependencies) => {
   return async (args: Args): Promise<string> => {
     const user = new User({ email: args.email, password: args.password });
-    user.isANewRegistred(args.name);
-    user.password = passwordManager.hash(user.password);
 
     const userInDb = await usersRepository.getByEmail(user.email);
     if (userInDb) throw new EmailAlreadyUsed();
+
+    user.isANewRegistred(args.name);
+    user.password = passwordManager.hash(user.password);
 
     await usersRepository.add(user);
 

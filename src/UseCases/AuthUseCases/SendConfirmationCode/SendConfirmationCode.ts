@@ -1,27 +1,15 @@
-import type {
-  WithConfirmationCodesRepository,
-  WithEmailService,
-  WithUsersRepository,
-} from "../_utils_/dependencies.interfaces";
+import type { Args, Dependencies } from "./SendConfirmationCode.types";
 
-import { ConfirmationCode } from "../../Domain/ConfirmationCode/ConfirmationCode";
-import { UserNotExist } from "../../utils/Exceptions";
-import { getEmailConfirmationHtmlTemplate } from "./_utils_/emailConfirmationHtmlTemplate";
-
-type Dependencies = WithUsersRepository &
-  WithConfirmationCodesRepository &
-  WithEmailService;
-
-interface Args {
-  email: string;
-}
+import { ConfirmationCode } from "../../../Domain/ConfirmationCode/ConfirmationCode";
+import { UserNotExist } from "../../../utils/Exceptions";
+import { getEmailConfirmationHtmlTemplate } from "../_utils_/emailConfirmationHtmlTemplate";
 
 const makeSendConfirmationCode = ({
   usersRepository,
   confirmationCodesRepository,
   emailService,
 }: Dependencies) => {
-  return async ({ email }: Args) => {
+  return async ({ email }: Args): Promise<number> => {
     const user = await usersRepository.getByEmail(email.toLowerCase().trim());
     if (!user) throw new UserNotExist();
 

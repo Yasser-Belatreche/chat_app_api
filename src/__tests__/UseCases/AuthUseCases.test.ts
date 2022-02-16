@@ -1,10 +1,10 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
-import { makeLogin } from "../../UseCases/AuthUseCases/Login";
-import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser";
-import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode";
-import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser";
+import { makeLogin } from "../../UseCases/AuthUseCases/Login/Login";
+import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser/RegisterUser";
+import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode/SendConfirmationCode";
+import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser/ConfirmUser";
 
 import { getFakeData } from "../__fakes__/data";
 import { getFakeDependencies } from "../__fakes__/dependencies";

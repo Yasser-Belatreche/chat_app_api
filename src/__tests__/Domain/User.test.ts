@@ -122,14 +122,17 @@ describe("User Entitiy", () => {
       .instanceOf(Error);
   });
 
+  it("should be able to change the status of the user into confirmed", () => {
+    const user = new User(validEmailAndPassword);
+    user.confirm();
+
+    expect(user.isConfirmed).to.be.true;
+  });
+
   it("should not be able to get isCofirmed when it's not set", () => {
-    const firstUser = new User(validEmailAndPassword);
-    const secondUser = new User(validEmailAndPassword);
+    const user = new User(validEmailAndPassword);
 
-    firstUser.isConfirmed = true;
-
-    expect(firstUser.isConfirmed).to.be.true;
-    expect(() => secondUser.isConfirmed)
+    expect(() => user.isConfirmed)
       .to.throw()
       .instanceOf(Error);
   });

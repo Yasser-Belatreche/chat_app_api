@@ -54,7 +54,7 @@ const handler = (usersRepository: typeof fakeUsersRepository) => () => {
     await usersRepository.add(user);
 
     const updatedInfo = { isConfirmed: true, name: "yasser" };
-    user.isConfirmed = updatedInfo.isConfirmed;
+    user.confirm();
     user.name = updatedInfo.name;
 
     await usersRepository.update(user);

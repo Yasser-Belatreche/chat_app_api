@@ -3,9 +3,13 @@ import { MessagesRepository } from "../../../../Ports/DrivenPorts/persistence/pe
 const repository = new Map();
 
 const messagesRepository: MessagesRepository = {
-  add: async (message) => {
-    repository.set(message.messageId, message);
-    return repository.get(message.messageId);
+  add: (message) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        repository.set(message.messageId, message);
+        resolve(repository.get(message.messageId));
+      }, 2);
+    });
   },
 
   getMessages: async ({
@@ -17,21 +21,23 @@ const messagesRepository: MessagesRepository = {
     const messagesList: any[] = [];
 
     repository.forEach((message) => {
-      if (isMessageBetween(message, firstUser, secondUser)) {
+      if (isMessageBetween(message, firstUser, secondUser))
         messagesList.push(message);
-      }
     });
 
-    messagesList.sort((a, b) => {
-      if (a.createdAt > b.createdAt) return -1;
-      else if (a.createAt < b.createdAt) return 1;
-      return 0;
-    });
+    messagesList.sort(sortByCreatedDate);
 
-    const offset = (numOfChunk - 1) * numOfMessagesPerChunk;
+    const start = (numOfChunk - 1) * numOfMessagesPerChunk;
+    const end = start + numOfMessagesPerChunk;
 
-    return messagesList.slice(offset, numOfMessagesPerChunk);
+    return messagesList.slice(start, end);
   },
+};
+
+const sortByCreatedDate = (a: any, b: any) => {
+  if (a.createdAt > b.createdAt) return -1;
+  else if (a.createAt < b.createdAt) return 1;
+  return 0;
 };
 
 const isMessageBetween = (

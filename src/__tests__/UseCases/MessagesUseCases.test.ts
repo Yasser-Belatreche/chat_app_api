@@ -1,10 +1,10 @@
 import { expect } from "chai";
 
-import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser";
-import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser";
-import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode";
-import { makeGetMessages } from "../../UseCases/MessagesUseCases/GetMessages";
-import { makeSendMessage } from "../../UseCases/MessagesUseCases/SendMessage";
+import { makeConfirmUser } from "../../UseCases/AuthUseCases/ConfirmUser/ConfirmUser";
+import { makeRegisterUser } from "../../UseCases/AuthUseCases/RegisterUser/RegisterUser";
+import { makeSendConfirmationCode } from "../../UseCases/AuthUseCases/SendConfirmationCode/SendConfirmationCode";
+import { makeGetMessages } from "../../UseCases/MessagesUseCases/GetMessages/GetMessages";
+import { makeSendMessage } from "../../UseCases/MessagesUseCases/SendMessage/SendMessage";
 
 import { getFakeData } from "../__fakes__/data";
 import { getFakeDependencies } from "../__fakes__/dependencies";
@@ -43,7 +43,7 @@ const sendMessage = makeSendMessage({
 const getMessages = makeGetMessages({ messagesRepository, tokenManager });
 
 describe("MessagesUseCases", () => {
-  describe("Send Messages", () => {
+  describe("Sending and Getting Messages", () => {
     it("should not be able to send a message to a non existing user", async () => {
       const [authUser] = await registerAndGetTwoUsers();
       const authToken = authUser.token;
@@ -63,6 +63,26 @@ describe("MessagesUseCases", () => {
         .rejected;
     });
 
+    it("not confirmed user cannot send or receive messages", async () => {
+      const confirmedUser = await registerAndConfirmRandomUser();
+      const notConfirmedUser = await regsiterRandomUser();
+
+      await expect(
+        sendMessage({
+          authToken: confirmedUser.token,
+          receiverId: notConfirmedUser.user.userId,
+          content: "hello",
+        })
+      ).to.be.rejected;
+      await expect(
+        sendMessage({
+          authToken: notConfirmedUser.token,
+          receiverId: confirmedUser.userId,
+          content: "hello",
+        })
+      ).to.be.rejected;
+    });
+
     it("should send the message to the target user when everything is ok", async () => {
       const [sender, receiver] = await registerAndGetTwoUsers();
 
@@ -77,7 +97,6 @@ describe("MessagesUseCases", () => {
       const messagesList = await getMessages({
         authToken: validArgs.authToken,
         chatParticipantId: receiver.userId,
-        numOfChunk: 1,
         numOfMessagesPerChunk: 1,
       });
 
@@ -98,15 +117,22 @@ const registerAndGetTwoUsers = async () => {
 };
 
 const registerAndConfirmRandomUser = async () => {
+  const { token, user } = await regsiterRandomUser();
+
+  const code = await sendConfirmationCode({ email: user.email });
+  await confirmUser({ authToken: token, code });
+
+  return { token, userId: user.userId };
+};
+
+const regsiterRandomUser = async () => {
   const { user } = fakeData;
   const email = user.email.toLowerCase();
 
   const token = await registerUser(user);
-  const code = await sendConfirmationCode({ email });
-  await confirmUser({ authToken: token, code });
 
   const userInDb = await usersRepository.getByEmail(email);
   if (!userInDb) throw "";
 
-  return { token, userId: userInDb.userId };
+  return { token, user: userInDb };
 };

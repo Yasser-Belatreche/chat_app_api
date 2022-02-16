@@ -17,7 +17,6 @@ const handler = (emailService: typeof fakeEmailService) => () => {
     await expect(emailService.send({ to: "", HTMLTemplate })).to.be.rejected;
   });
 };
-
 describe("emailService", () => {
   describe("Fake", handler(fakeEmailService));
 });

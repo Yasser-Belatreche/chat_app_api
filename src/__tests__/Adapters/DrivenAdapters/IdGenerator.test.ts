@@ -16,6 +16,5 @@ const handler = (idGenerator: typeof idGeneratorReal) => () => {
 
 describe("idGenerator", () => {
   describe("Fake", handler(idGeneratorFake));
-
   describe("Real", handler(idGeneratorReal));
 });

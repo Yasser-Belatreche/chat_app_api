@@ -1,27 +1,14 @@
-import type {
-  WithConfirmationCodesRepository,
-  WithTokenManager,
-  WithUsersRepository,
-} from "../_utils_/dependencies.interfaces";
+import type { Args, Dependencies, UserInfo } from "./ConfirmUser.types";
 
-import { UserNotExist } from "../../utils/Exceptions";
-import { WrongConfirmationCode } from "./_utils_/Exceptions";
-
-type Dependencies = WithTokenManager &
-  WithUsersRepository &
-  WithConfirmationCodesRepository;
-
-interface Args {
-  authToken: string;
-  code: number;
-}
+import { UserNotExist } from "../../../utils/Exceptions";
+import { WrongConfirmationCode } from "../_utils_/Exceptions";
 
 const makeConfirmUser = ({
   tokenManager,
   usersRepository,
   confirmationCodesRepository,
 }: Dependencies) => {
-  return async ({ authToken, code }: Args) => {
+  return async ({ authToken, code }: Args): Promise<UserInfo> => {
     const userId = tokenManager.decode(authToken);
 
     const user = await usersRepository.getById(userId);
@@ -32,10 +19,16 @@ const makeConfirmUser = ({
 
     await confirmationCodesRepository.delete(user.email);
 
-    user.isConfirmed = true;
+    user.confirm();
     const updatedUser = await usersRepository.update(user);
 
-    return updatedUser;
+    return {
+      userId: updatedUser.userId,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isConfirmed: updatedUser.isConfirmed,
+      createdAt: updatedUser.createdAt,
+    };
   };
 };
 
