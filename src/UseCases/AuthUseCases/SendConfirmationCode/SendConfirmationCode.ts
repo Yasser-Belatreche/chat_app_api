@@ -2,7 +2,7 @@ import type { Args, Dependencies } from "./SendConfirmationCode.types";
 
 import { ConfirmationCode } from "../../../Domain/ConfirmationCode/ConfirmationCode";
 import { UserNotExist } from "../../../utils/Exceptions";
-import { getEmailConfirmationHtmlTemplate } from "../_utils_/emailConfirmationHtmlTemplate";
+import { getEmailConfirmationHtmlTemplate } from "./_utils_/emailConfirmationHtmlTemplate";
 
 const makeSendConfirmationCode = ({
   usersRepository,

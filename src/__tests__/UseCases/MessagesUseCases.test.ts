@@ -46,7 +46,7 @@ const sendMessage = makeSendMessage({
 const getMessages = makeGetMessages({ messagesRepository, tokenManager });
 
 describe("MessagesUseCases", () => {
-  describe("Sending & Getting Messages", () => {
+  describe("Sending Messages", () => {
     const newMessageNotificationSpy = Sinon.spy(
       notificationsManager,
       "newMessage"
@@ -116,6 +116,45 @@ describe("MessagesUseCases", () => {
       );
     });
   });
+
+  describe("Getting Messages", () => {
+    let sender_1: any, sender_2: any, receiver_1: any, receiver_2: any;
+
+    before(async () => {
+      [sender_1, receiver_1] = await registerAndGetTwoUsers();
+      [sender_2, receiver_2] = await registerAndGetTwoUsers();
+
+      await send30Message(sender_1, receiver_1);
+      await send30Message(sender_2, receiver_2);
+    });
+
+    it("should get the latest 20 message between the two target users", async () => {
+      const messages = await getMessages({
+        authToken: sender_1.token,
+        chatParticipantId: receiver_1.userId,
+      });
+
+      expect(messages).to.have.lengthOf(20);
+      expect(messages[0]).to.have.property("content", "30");
+      expect(messages[messages.length - 1]).to.have.property("content", "11");
+      messages.map((message) => {
+        expect(message).to.have.property("senderId", sender_1.userId);
+        expect(message).to.have.property("receiverId", receiver_1.userId);
+      });
+    });
+
+    it("should be able to customize the number of messages returned, also the number of messages chunk", async () => {
+      const messages = await getMessages({
+        authToken: sender_1.token,
+        chatParticipantId: receiver_1.userId,
+        numOfChunk: 2,
+        numOfMessagesPerChunk: 5,
+      });
+      expect(messages).to.have.lengthOf(5);
+      expect(messages[0]).to.have.property("content", "25");
+      expect(messages[messages.length - 1]).to.have.property("content", "21");
+    });
+  });
 });
 
 const registerAndGetTwoUsers = async () => {
@@ -144,4 +183,15 @@ const regsiterRandomUser = async () => {
   if (!userInDb) throw "";
 
   return { token, user: userInDb };
+};
+
+const send30Message = async (sender: any, receiver: any) => {
+  let i = 1;
+  while (i <= 30) {
+    await sendMessage({
+      authToken: sender.token,
+      receiverId: receiver.userId,
+      content: `${i++}`,
+    });
+  }
 };
