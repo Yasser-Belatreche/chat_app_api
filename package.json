@@ -8,9 +8,9 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon ./src/index.ts",
-    "test:macro": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Domain/**/*.test.ts'",
-    "test:contract": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/Adapters/**/*.test.ts'",
-    "test:acceptance": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/__tests__/UseCases/**/*.test.ts'",
+    "test:macro": "mocha -r ts-node/register 'src/__tests__/Domain/**/*.test.ts'",
+    "test:contract": "mocha -r ts-node/register 'src/__tests__/Adapters/**/*.test.ts'",
+    "test:acceptance": "mocha -r ts-node/register 'src/__tests__/UseCases/**/*.test.ts'",
     "test": "npm run test:macro && npm run test:contract && npm run test:acceptance"
   },
   "repository": {
