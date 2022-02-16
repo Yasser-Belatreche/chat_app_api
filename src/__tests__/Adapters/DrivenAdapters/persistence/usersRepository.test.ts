@@ -64,6 +64,25 @@ const handler = (usersRepository: typeof fakeUsersRepository) => () => {
     expect(userInDb?.isConfirmed).to.equal(updatedInfo.isConfirmed);
     expect(userInDb?.name).to.equal(updatedInfo.name);
   });
+
+  it("should be able to search for users by name of email", async () => {
+    const user = getNewUser();
+    await usersRepository.add(user);
+
+    const isFound = (result: any[]) => {
+      return result.find((u) => u.userId === user.userId);
+    };
+
+    let searchKeword = user.name.slice(1, 4);
+    let searchResult = await usersRepository.searchFor(searchKeword);
+
+    expect(isFound(searchResult)).to.not.be.undefined;
+
+    searchKeword = user.email.slice(0, 4);
+    searchResult = await usersRepository.searchFor(searchKeword);
+
+    expect(isFound(searchResult)).to.not.be.undefined;
+  });
 };
 
 describe("usersRepository", () => {

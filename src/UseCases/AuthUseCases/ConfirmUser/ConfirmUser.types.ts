@@ -14,5 +14,3 @@ export interface Args {
   authToken: string;
   code: number;
 }
-
-export type UserInfo = Omit<NonFunctionProperties<IUser>, "password">;

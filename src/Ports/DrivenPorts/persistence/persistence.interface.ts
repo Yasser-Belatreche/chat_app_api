@@ -7,6 +7,7 @@ export interface UsersRepository {
   getById: (userId: string) => Promise<IUser | undefined>;
   getByEmail: (email: string) => Promise<IUser | undefined>;
   update: (user: IUser) => Promise<IUser>;
+  searchFor: (keyword: string) => Promise<IUser[]>;
 }
 
 export interface ConfirmationCodesRepository {

@@ -20,6 +20,15 @@ const usersRepository: UsersRepository = {
     repository.set(user.userId, user);
     return repository.get(user.userId);
   },
+
+  searchFor: async (keyword) => {
+    let result: any[] = [];
+    repository.forEach((user) => {
+      if (user.name.includes(keyword) || user.email.includes(keyword))
+        result.push(user);
+    });
+    return result;
+  },
 };
 
 export { usersRepository };

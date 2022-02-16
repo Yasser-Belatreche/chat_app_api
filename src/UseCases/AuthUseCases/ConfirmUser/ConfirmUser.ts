@@ -1,7 +1,9 @@
-import type { Args, Dependencies, UserInfo } from "./ConfirmUser.types";
+import type { Args, Dependencies } from "./ConfirmUser.types";
+import type { UserInfo } from "../../_utils_/types";
 
 import { UserNotExist } from "../../../utils/Exceptions";
 import { WrongConfirmationCode } from "../_utils_/Exceptions";
+import { getUserInfoFromClass } from "../../_utils_/getRegularInfoFromClasses";
 
 const makeConfirmUser = ({
   tokenManager,
@@ -22,13 +24,7 @@ const makeConfirmUser = ({
     user.confirm();
     const updatedUser = await usersRepository.update(user);
 
-    return {
-      userId: updatedUser.userId,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isConfirmed: updatedUser.isConfirmed,
-      createdAt: updatedUser.createdAt,
-    };
+    return getUserInfoFromClass(updatedUser);
   };
 };
 
