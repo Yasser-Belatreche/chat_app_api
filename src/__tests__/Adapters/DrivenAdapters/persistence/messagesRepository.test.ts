@@ -18,9 +18,7 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
   describe("Adding a message", () => {
     it("should add a message", async () => {
       const message = getNewMessage();
-
       await messagesRepository.add(message);
-
       const messagesList = await messagesRepository.getMessages({
         between: message.receiverId,
         and: message.senderId,
@@ -43,7 +41,6 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
         between: senderId,
         and: receiverId,
       });
-
       const length = messagesList.length;
 
       expect(length).to.equal(20);
@@ -101,6 +98,44 @@ const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
           expect(message).to.have.property("receiverId", receiversIds[index]);
         });
       });
+    });
+
+    it("should get the last message with every user", async () => {
+      const authUserId = "someId";
+      const randomUsersIds = ["2", "3", "4"];
+
+      for (let i = 0; i < randomUsersIds.length; i++) {
+        for (let j = 0; j < 3; j++) {
+          await messagesRepository.add(
+            new Message({
+              content: j.toString(),
+              receiverId: randomUsersIds[i],
+              senderId: authUserId,
+            })
+          );
+        }
+      }
+      const messagesList = await messagesRepository.getLastMessageWithEveryUser(
+        authUserId
+      );
+
+      expect(messagesList).to.have.length(3);
+      expect(messagesList[0]).to.have.property(
+        "receiverId",
+        randomUsersIds[randomUsersIds.length - 1]
+      );
+      expect(messagesList[0]).to.have.property("content", "2");
+      expect(messagesList[1]).to.have.property(
+        "receiverId",
+        randomUsersIds[randomUsersIds.length - 2]
+      );
+      expect(messagesList[1]).to.have.property("content", "2");
+
+      expect(messagesList[2]).to.have.property(
+        "receiverId",
+        randomUsersIds[randomUsersIds.length - 3]
+      );
+      expect(messagesList[2]).to.have.property("content", "2");
     });
   });
 };

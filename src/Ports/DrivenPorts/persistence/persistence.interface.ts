@@ -36,4 +36,5 @@ interface GetMessagesArgs {
 export interface MessagesRepository {
   add: (message: IMessage) => Promise<IMessage>;
   getMessages: (args: GetMessagesArgs) => Promise<IMessage[]>;
+  getLastMessageWithEveryUser: (userId: string) => Promise<IMessage[]>;
 }

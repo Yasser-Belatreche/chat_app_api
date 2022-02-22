@@ -1,13 +1,14 @@
+import { IMessage } from "../../../../Domain/Message/Message.Factory";
 import { MessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 
-const repository = new Map();
+const repository = new Map<string, IMessage>();
 
 const messagesRepository: MessagesRepository = {
   add: (message) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         repository.set(message.messageId, message);
-        resolve(repository.get(message.messageId));
+        resolve(message);
       }, 2);
     });
   },
@@ -18,7 +19,7 @@ const messagesRepository: MessagesRepository = {
     numOfChunk = 1,
     numOfMessagesPerChunk = 20,
   }) => {
-    const messagesList: any[] = [];
+    const messagesList: IMessage[] = [];
 
     repository.forEach((message) => {
       if (isMessageBetween(message, firstUser, secondUser))
@@ -31,6 +32,38 @@ const messagesRepository: MessagesRepository = {
     const end = start + numOfMessagesPerChunk;
 
     return messagesList.slice(start, end);
+  },
+
+  getLastMessageWithEveryUser: async (userId) => {
+    let messages: IMessage[] = [];
+
+    repository.forEach((message) => {
+      if (message.receiverId == userId || message.senderId == userId)
+        messages.push(message);
+    });
+    messages.sort(sortByCreatedDate);
+
+    messages = messages.reduce((acc: IMessage[], message) => {
+      const senderId = message.senderId;
+      const receiverId = message.receiverId;
+      let found = false;
+
+      acc.forEach((uniqueMessage: any) => {
+        if (
+          (senderId == uniqueMessage.senderId ||
+            senderId == uniqueMessage.receiverId) &&
+          (receiverId == uniqueMessage.senderId ||
+            receiverId == uniqueMessage.receiverId)
+        ) {
+          found = true;
+        }
+      });
+      !found && acc.push(message);
+
+      return acc;
+    }, []);
+
+    return messages;
   },
 };
 

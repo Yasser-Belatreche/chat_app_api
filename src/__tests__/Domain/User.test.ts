@@ -136,4 +136,17 @@ describe("User Entitiy", () => {
       .to.throw()
       .instanceOf(Error);
   });
+
+  it("should be able to retrieve all the user information, without the password", () => {
+    const user = new User(validEmailAndPassword);
+    user.isANewRegistred("John Smith");
+
+    const userInfo = user.userInfo();
+
+    expect(userInfo.userId).to.equal(user.userId);
+    expect(userInfo.name).to.equal(user.name);
+    expect(userInfo.email).to.equal(user.email);
+    expect(userInfo.createdAt).to.equal(user.createdAt);
+    expect(userInfo.isConfirmed).to.equal(user.isConfirmed);
+  });
 });

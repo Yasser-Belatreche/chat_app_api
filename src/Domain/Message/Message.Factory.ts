@@ -1,4 +1,5 @@
 import type { WithIdGenerator } from "../_utils_/Dependencies.interfaces";
+import { NonFunctionProperties } from "../_utils_/Type";
 
 import { NoContent, NoSenderAndReceiver } from "./_utils_/Exceptions";
 
@@ -11,6 +12,7 @@ export interface IMessage {
   content: string;
   seen: boolean;
   createdAt: string;
+  messageInfo: () => NonFunctionProperties<IMessage>;
 }
 
 type MessageArgs = Pick<IMessage, "senderId" | "receiverId" | "content">;
@@ -58,6 +60,17 @@ const makeMessage = ({ idGenerator }: Dependencies) => {
 
     public get createdAt(): string {
       return this._createdAt;
+    }
+
+    public messageInfo(): NonFunctionProperties<IMessage> {
+      return {
+        messageId: this.messageId,
+        receiverId: this.receiverId,
+        senderId: this.senderId,
+        content: this.content,
+        seen: this.seen,
+        createdAt: this.createdAt,
+      };
     }
   };
 };

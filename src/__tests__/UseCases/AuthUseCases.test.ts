@@ -55,7 +55,7 @@ describe("AuthUseCases", () => {
       expect(userToken).to.be.a("string").to.include("Bearer ");
     });
 
-    it("new registred users should have the isConfirmed to be false", async () => {
+    it("new registred users should not be Confirmed", async () => {
       const user = fakeData.user;
 
       await registerUser(user);
@@ -68,7 +68,7 @@ describe("AuthUseCases", () => {
     });
 
     it("should be able to login after registration", async () => {
-      const user = fakeData.user;
+      const { user } = fakeData;
 
       await registerUser(user);
       const userToken = await login({
@@ -79,7 +79,7 @@ describe("AuthUseCases", () => {
     });
 
     it("should not be able to login with wrong password, or if the email does not exist", async () => {
-      const user = fakeData.user;
+      const { user } = fakeData;
       const email = user.email.toLowerCase();
 
       await registerUser(user);

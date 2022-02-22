@@ -1,8 +1,6 @@
 import type { Args, Dependencies } from "./ConfirmUser.types";
-import type { UserInfo } from "../../_utils_/types";
 
 import { WrongConfirmationCode } from "../_utils_/Exceptions";
-import { getUserInfoFromClass } from "../../_utils_/getRegularInfoFromClasses";
 import { UserNotExist } from "../../_utils_/Exceptions";
 
 const makeConfirmUser = ({
@@ -10,7 +8,7 @@ const makeConfirmUser = ({
   usersRepository,
   confirmationCodesRepository,
 }: Dependencies) => {
-  return async ({ authToken, code }: Args): Promise<UserInfo> => {
+  return async ({ authToken, code }: Args) => {
     const userId = tokenManager.decode(authToken);
 
     const user = await usersRepository.getById(userId);
@@ -24,7 +22,7 @@ const makeConfirmUser = ({
     user.confirm();
     const updatedUser = await usersRepository.update(user);
 
-    return getUserInfoFromClass(updatedUser);
+    return updatedUser.userInfo();
   };
 };
 

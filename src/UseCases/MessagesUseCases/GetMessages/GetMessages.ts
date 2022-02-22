@@ -1,6 +1,4 @@
 import type { Args, Dependencies } from "./GetMessages.types";
-import type { MessageInfo } from "../_utils_/types";
-import { getMessagesInfoFromClasses } from "../_utils_/getMessagesInfoFromClasses";
 
 const makeGetMessages = ({
   messagesRepository,
@@ -11,7 +9,7 @@ const makeGetMessages = ({
     chatParticipantId,
     numOfChunk,
     numOfMessagesPerChunk,
-  }: Args): Promise<MessageInfo[]> => {
+  }: Args) => {
     const authUserId = tokenManager.decode(authToken);
 
     const messagesList = await messagesRepository.getMessages({
@@ -21,7 +19,7 @@ const makeGetMessages = ({
       numOfMessagesPerChunk,
     });
 
-    return getMessagesInfoFromClasses(messagesList);
+    return messagesList.map((message) => message.messageInfo());
   };
 };
 

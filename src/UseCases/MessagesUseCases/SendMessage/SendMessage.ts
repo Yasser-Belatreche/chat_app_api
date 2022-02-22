@@ -1,11 +1,9 @@
 import type { Args, Dependencies } from "./SendMessage.types";
 import type { IUser } from "../../../Domain/User/User.Factory";
 import type { IMessage } from "../../../Domain/Message/Message.Factory";
-import type { MessageInfo } from "../_utils_/types";
 
 import { Message } from "../../../Domain/Message/Message";
 import { UserNotConfirmed, UserNotExist } from "../../_utils_/Exceptions";
-import { getMessageInfoFromClass } from "../_utils_/getMessagesInfoFromClasses";
 
 const makeSendMessage = ({
   tokenManager,
@@ -13,11 +11,7 @@ const makeSendMessage = ({
   messagesRepository,
   notificationsManager,
 }: Dependencies) => {
-  return async ({
-    authToken,
-    receiverId,
-    content,
-  }: Args): Promise<MessageInfo> => {
+  return async ({ authToken, receiverId, content }: Args) => {
     const authUserId = tokenManager.decode(authToken);
 
     const sender = await usersRepository.getById(authUserId);
@@ -35,10 +29,10 @@ const makeSendMessage = ({
     const newMessage = await messagesRepository.add(message);
 
     await notificationsManager.newMessage(
-      getNewMessageNotificationArgs(newMessage, sender)
+      getNotificationArgs(newMessage, sender)
     );
 
-    return getMessageInfoFromClass(newMessage);
+    return newMessage.messageInfo();
   };
 };
 
@@ -46,7 +40,7 @@ const isUsersConfirmed = (first: IUser, second: IUser) => {
   return first.isConfirmed && second.isConfirmed;
 };
 
-const getNewMessageNotificationArgs = (message: IMessage, sender: IUser) => {
+const getNotificationArgs = (message: IMessage, sender: IUser) => {
   return {
     receiverId: message.receiverId,
     message: {

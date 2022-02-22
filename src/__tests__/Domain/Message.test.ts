@@ -38,4 +38,17 @@ describe("Message Entity", () => {
     const antherMessage = new Message(validMessage);
     expect(antherMessage.messageId).to.not.equal(message.messageId);
   });
+
+  it("should be able to retrieve the message information", () => {
+    const message = new Message(validMessage);
+
+    const messageInfo = message.messageInfo();
+
+    expect(messageInfo.messageId).to.equal(message.messageId);
+    expect(messageInfo.receiverId).to.equal(message.receiverId);
+    expect(messageInfo.senderId).to.equal(message.senderId);
+    expect(messageInfo.content).to.equal(message.content);
+    expect(messageInfo.createdAt).to.equal(message.createdAt);
+    expect(messageInfo.seen).to.equal(message.seen);
+  });
 });

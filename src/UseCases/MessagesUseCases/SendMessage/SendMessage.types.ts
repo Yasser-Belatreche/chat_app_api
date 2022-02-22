@@ -3,7 +3,7 @@ import type {
   WithNotificationsManager,
   WithTokenManager,
   WithUsersRepository,
-} from "../../_utils_/dependencies.interfaces";
+} from "../../_utils_/Dependencies.interfaces";
 
 export type Dependencies = WithTokenManager &
   WithUsersRepository &

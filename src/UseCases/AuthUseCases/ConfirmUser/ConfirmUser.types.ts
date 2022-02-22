@@ -1,10 +1,8 @@
-import type { IUser } from "../../../Domain/User/User.Factory";
 import type {
   WithConfirmationCodesRepository,
   WithTokenManager,
   WithUsersRepository,
-} from "../../_utils_/dependencies.interfaces";
-import type { NonFunctionProperties } from "../../_utils_/types";
+} from "../../_utils_/Dependencies.interfaces";
 
 export type Dependencies = WithTokenManager &
   WithUsersRepository &

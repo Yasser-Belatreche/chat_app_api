@@ -1,4 +1,5 @@
 import type { WithIdGenerator } from "../_utils_/Dependencies.interfaces";
+import { NonFunctionProperties } from "../_utils_/Type";
 
 import {
   CreatedAtNotSet,
@@ -20,6 +21,7 @@ export interface IUser {
   name: string;
   createdAt: string;
   isConfirmed: boolean;
+  userInfo: () => Omit<NonFunctionProperties<IUser>, "password">;
   isANewRegistred: (name: string) => void;
   confirm: () => void;
 }
@@ -85,6 +87,16 @@ const makeUser = ({ idGenerator }: Dependencies) => {
     public get isConfirmed(): boolean {
       if (this._isConfirmed === undefined) throw new isConfirmedNotSet();
       return this._isConfirmed;
+    }
+
+    public userInfo(): Omit<NonFunctionProperties<IUser>, "password"> {
+      return {
+        userId: this.userId,
+        name: this.name,
+        email: this.email,
+        createdAt: this.createdAt,
+        isConfirmed: this.isConfirmed,
+      };
     }
 
     public isANewRegistred(name: string) {
