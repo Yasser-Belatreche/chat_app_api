@@ -22,6 +22,7 @@ const makeSendConfirmationCode = ({
 
     await emailService.send({
       to: user.email,
+      title: "Your Confirmation Code",
       HTMLTemplate: getEmailConfirmationHtmlTemplate(confirmationCode.code),
     });
 

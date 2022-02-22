@@ -28,9 +28,10 @@ const makeSendMessage = ({
 
     const newMessage = await messagesRepository.add(message);
 
-    await notificationsManager.newMessage(
-      getNotificationArgs(newMessage, sender)
-    );
+    await notificationsManager.newMessage({
+      message: newMessage.messageInfo(),
+      sender: sender.userInfo(),
+    });
 
     return newMessage.messageInfo();
   };
@@ -38,21 +39,6 @@ const makeSendMessage = ({
 
 const isUsersConfirmed = (first: IUser, second: IUser) => {
   return first.isConfirmed && second.isConfirmed;
-};
-
-const getNotificationArgs = (message: IMessage, sender: IUser) => {
-  return {
-    receiverId: message.receiverId,
-    message: {
-      messageId: message.messageId,
-      content: message.content,
-      createdAt: message.createdAt,
-      sender: {
-        userId: sender.userId,
-        name: sender.name,
-      },
-    },
-  };
 };
 
 export { makeSendMessage };

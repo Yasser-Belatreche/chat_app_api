@@ -7,8 +7,8 @@ const makeGetMessages = ({
   return async ({
     authToken,
     chatParticipantId,
-    numOfChunk,
-    numOfMessagesPerChunk,
+    numOfChunk = 1,
+    numOfMessagesPerChunk = 20,
   }: Args) => {
     const authUserId = tokenManager.decode(authToken);
 

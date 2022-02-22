@@ -6,8 +6,8 @@ import { getFakeData } from "../../../__fakes__/data";
 import { getFakeDependencies } from "../../../__fakes__/dependencies";
 import { usersRepository as fakeUsersRepository } from "../../../__fakes__/dependencies/persistence/usersRepository";
 
-const { idGenerator } = getFakeDependencies();
-const User = makeUser({ idGenerator });
+const { IdGeneratorFake } = getFakeDependencies();
+const User = makeUser({ idGenerator: new IdGeneratorFake() });
 
 const handler = (usersRepository: typeof fakeUsersRepository) => () => {
   const fakeData = getFakeData();

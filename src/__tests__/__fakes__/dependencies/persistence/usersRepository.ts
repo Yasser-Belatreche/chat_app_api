@@ -1,8 +1,8 @@
-import type { UsersRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import type { IUsersRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 
 const repository = new Map();
 
-const usersRepository: UsersRepository = {
+const usersRepository: IUsersRepository = {
   add: async (user) => {
     repository.set(user.userId, user);
     return repository.get(user.userId);

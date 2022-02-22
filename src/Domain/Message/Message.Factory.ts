@@ -12,7 +12,7 @@ export interface IMessage {
   content: string;
   seen: boolean;
   createdAt: string;
-  messageInfo: () => NonFunctionProperties<IMessage>;
+  messageInfo(): NonFunctionProperties<IMessage>;
 }
 
 type MessageArgs = Pick<IMessage, "senderId" | "receiverId" | "content">;

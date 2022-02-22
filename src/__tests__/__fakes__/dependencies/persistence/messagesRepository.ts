@@ -1,13 +1,13 @@
 import { IMessage } from "../../../../Domain/Message/Message.Factory";
-import { MessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import { IMessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 
 const repository = new Map<string, IMessage>();
 
-const messagesRepository: MessagesRepository = {
+const messagesRepository: IMessagesRepository = {
   add: (message) => {
+    repository.set(message.messageId, message);
     return new Promise((resolve) => {
       setTimeout(() => {
-        repository.set(message.messageId, message);
         resolve(message);
       }, 2);
     });

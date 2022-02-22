@@ -1,37 +1,37 @@
-import type { EmailService } from "../../Ports/DrivenPorts/EmailService/emailService.interface";
-import type { NotificationsManager } from "../../Ports/DrivenPorts/NotificationsManager/notificationsManager.interface";
-import type { PasswordManager } from "../../Ports/DrivenPorts/PasswordManager/passwordManager.interface";
-import type { TokenManager } from "../../Ports/DrivenPorts/TokenManager/tokenManager.interface";
+import type { IEmailService } from "../../Ports/DrivenPorts/EmailService/EmailService.interface";
+import type { INotificationsManager } from "../../Ports/DrivenPorts/NotificationsManager/NotificationsManager.interface";
+import type { IPasswordManager } from "../../Ports/DrivenPorts/PasswordManager/PasswordManager.interface";
+import type { ITokenManager } from "../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 import type {
-  ConfirmationCodesRepository,
-  MessagesRepository,
-  UsersRepository,
+  IConfirmationCodesRepository,
+  IMessagesRepository,
+  IUsersRepository,
 } from "../../Ports/DrivenPorts/persistence/persistence.interface";
 
 export interface WithUsersRepository {
-  usersRepository: UsersRepository;
+  usersRepository: IUsersRepository;
 }
 
 export interface WithConfirmationCodesRepository {
-  confirmationCodesRepository: ConfirmationCodesRepository;
+  confirmationCodesRepository: IConfirmationCodesRepository;
 }
 
 export interface WithMessagesRepository {
-  messagesRepository: MessagesRepository;
+  messagesRepository: IMessagesRepository;
 }
 
 export interface WithPasswordManager {
-  passwordManager: PasswordManager;
+  passwordManager: IPasswordManager;
 }
 
 export interface WithTokenManager {
-  tokenManager: TokenManager;
+  tokenManager: ITokenManager;
 }
 
 export interface WithEmailService {
-  emailService: EmailService;
+  emailService: IEmailService;
 }
 
 export interface WithNotificationsManager {
-  notificationsManager: NotificationsManager;
+  notificationsManager: INotificationsManager;
 }

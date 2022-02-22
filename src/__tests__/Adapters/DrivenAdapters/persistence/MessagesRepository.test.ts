@@ -1,9 +1,10 @@
 import { expect } from "chai";
 
+import type { IMessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 import { Message } from "../../../../Domain/Message/Message";
 import { messagesRepository as fakeMessagesRepository } from "../../../__fakes__/dependencies/persistence/messagesRepository";
 
-const handler = (messagesRepository: typeof fakeMessagesRepository) => () => {
+const handler = (messagesRepository: IMessagesRepository) => () => {
   const senderId = "senderId";
   const receiverId = "receiverId";
 

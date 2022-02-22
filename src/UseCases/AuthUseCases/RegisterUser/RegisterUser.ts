@@ -15,7 +15,7 @@ const makeRegisterUser = ({
     if (userInDb) throw new EmailAlreadyUsed();
 
     user.isANewRegistred(args.name);
-    user.password = passwordManager.hash(user.password);
+    user.password = await passwordManager.hash(user.password);
 
     await usersRepository.add(user);
 

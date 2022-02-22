@@ -21,9 +21,9 @@ export interface IUser {
   name: string;
   createdAt: string;
   isConfirmed: boolean;
-  userInfo: () => Omit<NonFunctionProperties<IUser>, "password">;
-  isANewRegistred: (name: string) => void;
-  confirm: () => void;
+  userInfo(): Omit<NonFunctionProperties<IUser>, "password">;
+  isANewRegistred(name: string): void;
+  confirm(): void;
 }
 
 interface EmailAndPassword {

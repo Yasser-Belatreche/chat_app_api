@@ -1,19 +1,19 @@
-import { emailService } from "./emailService";
-import { idGenerator } from "./idGenerator";
-import { notificationsManager } from "./notificationsManager";
-import { passwordManager } from "./passwordManager";
+import { EmailServiceFake } from "./EmailService";
+import { IdGeneratorFake } from "./IdGenerator";
+import { notificationsManager } from "./NotificationsManager";
+import { PasswordManagerFake } from "./PasswordManager";
 import { confirmationCodesRepository } from "./persistence/confirmationCodesRepository";
 import { messagesRepository } from "./persistence/messagesRepository";
 import { usersRepository } from "./persistence/usersRepository";
-import { tokenManager } from "./tokenMananger";
+import { TokenManagerFake } from "./TokenMananger";
 
 const getFakeDependencies = () => ({
-  idGenerator,
+  IdGeneratorFake,
   usersRepository,
-  passwordManager,
-  tokenManager,
+  PasswordManagerFake,
+  TokenManagerFake,
   confirmationCodesRepository,
-  emailService,
+  EmailServiceFake,
   messagesRepository,
   notificationsManager,
 });

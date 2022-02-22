@@ -2,6 +2,7 @@ import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import { ConfirmationCode } from "../../../../Domain/ConfirmationCode/ConfirmationCode";
+import type { IConfirmationCodesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 
 import { getFakeData } from "../../../__fakes__/data";
 import { confirmationCodesRepository as fakeConfirmationCodesRepository } from "../../../__fakes__/dependencies/persistence/confirmationCodesRepository";
@@ -10,9 +11,8 @@ chai.use(chaiAsPromised);
 
 const fakeData = getFakeData();
 
-const handler =
-  (confirmationCodesRepository: typeof fakeConfirmationCodesRepository) =>
-  () => {
+const handler = (confirmationCodesRepository: IConfirmationCodesRepository) => {
+  return () => {
     it("should save a confirmationCode", async () => {
       const { user } = fakeData;
 
@@ -52,7 +52,8 @@ const handler =
         .eventually.be.undefined;
     });
   };
+};
 
-describe("confirmationCodesRepository", () => {
+describe("ConfirmationCodesRepository", () => {
   describe("Fake", handler(fakeConfirmationCodesRepository));
 });

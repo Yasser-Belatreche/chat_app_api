@@ -1,8 +1,8 @@
-import type { ConfirmationCodesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import type { IConfirmationCodesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
 
 const repository = new Map();
 
-const confirmationCodesRepository: ConfirmationCodesRepository = {
+const confirmationCodesRepository: IConfirmationCodesRepository = {
   add: async (confirmationCode) => {
     repository.set(confirmationCode.email, confirmationCode);
     return repository.get(confirmationCode.email);

@@ -14,7 +14,7 @@ const makeLogin = ({
     const userInDb = await usersRepository.getByEmail(userWantToLogin.email);
     if (!userInDb) throw new InvalidCredentials();
 
-    const isCorrectPassword = passwordManager.isHashMatchLiteral({
+    const isCorrectPassword = await passwordManager.isHashMatchLiteral({
       hash: userInDb.password,
       literal: userWantToLogin.password,
     });
