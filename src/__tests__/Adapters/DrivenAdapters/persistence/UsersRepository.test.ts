@@ -2,14 +2,17 @@ import { expect } from "chai";
 
 import { makeUser } from "../../../../Domain/User/User.Factory";
 
+import type { IUsersRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+
 import { getFakeData } from "../../../__fakes__/data";
 import { getFakeDependencies } from "../../../__fakes__/dependencies";
 import { usersRepository as fakeUsersRepository } from "../../../__fakes__/dependencies/persistence/usersRepository";
+import { UsersRepository } from "../../../../Adapters/DrivenAdapters/Persistence/UsersRepository";
 
 const { IdGeneratorFake } = getFakeDependencies();
 const User = makeUser({ idGenerator: new IdGeneratorFake() });
 
-const handler = (usersRepository: typeof fakeUsersRepository) => () => {
+const handler = (usersRepository: IUsersRepository) => () => {
   const fakeData = getFakeData();
 
   const getNewUser = () => {
@@ -87,4 +90,5 @@ const handler = (usersRepository: typeof fakeUsersRepository) => () => {
 
 describe("usersRepository", () => {
   describe("Fake", handler(fakeUsersRepository));
+  describe("Real", handler(new UsersRepository()));
 });

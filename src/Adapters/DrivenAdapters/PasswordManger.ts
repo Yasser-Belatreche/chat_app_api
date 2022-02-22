@@ -3,8 +3,6 @@ import bcrypt from "bcrypt";
 import type { IPasswordManager } from "../../Ports/DrivenPorts/PasswordManager/PasswordManager.interface";
 
 class PasswordManager implements IPasswordManager {
-  constructor() {}
-
   async hash(password: any): Promise<string> {
     const hash = await bcrypt.hash(password, 10);
     return hash;

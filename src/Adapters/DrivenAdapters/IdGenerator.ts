@@ -3,9 +3,7 @@ import type { IIdGenerator } from "../../Ports/DrivenPorts/IdGenerator/IdGenerat
 import { v4 as uuid } from "uuid";
 
 class IdGenerator implements IIdGenerator {
-  constructor() {}
-
-  generate() {
+  generate(): string {
     return uuid();
   }
 }

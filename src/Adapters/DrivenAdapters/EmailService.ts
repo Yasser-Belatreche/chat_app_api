@@ -21,7 +21,7 @@ class EmailService implements IEmailService {
     this.EMAIL_PASSWORD = password;
   }
 
-  async send(args: Email): Promise<void> {
+  public async send(args: Email): Promise<void> {
     const transporter = this.getTransporter();
 
     await transporter.sendMail({
