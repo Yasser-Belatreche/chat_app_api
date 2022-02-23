@@ -1,27 +1,27 @@
 import type { Args, Dependencies } from "./GetContactsList.types";
+import type { IUser } from "../../../Domain/User/User.types";
+import type { IMessage } from "../../../Domain/Message/Message.Factory";
 
 import { UserNotExist } from "../../_utils_/Exceptions";
-import { IUser } from "../../../Domain/User/User.Factory";
-import { IMessage } from "../../../Domain/Message/Message.Factory";
 
 const makeGetContactsList = ({
   tokenManager,
-  usersRepository,
-  messagesRepository,
+  usersGateway,
+  messagesGateway,
 }: Dependencies) => {
   return async ({ authToken }: Args) => {
     const authUserId = tokenManager.decode(authToken);
 
-    const user = await usersRepository.getById(authUserId);
+    const user = await usersGateway.getById(authUserId);
     if (!user) throw new UserNotExist();
 
-    const messages = await messagesRepository.getLastMessageWithEveryUser(
+    const messages = await messagesGateway.getLastMessageWithEveryUser(
       user.userId
     );
 
     const contactsIds = getContactsIds(authUserId, messages);
     const contacts: (IUser | undefined)[] = await Promise.all(
-      contactsIds.map((id) => usersRepository.getById(id))
+      contactsIds.map((id) => usersGateway.getById(id))
     );
 
     return messages.map((message, index) => ({

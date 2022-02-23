@@ -33,7 +33,7 @@ const handler = (tokenManager: ITokenManager) => () => {
   });
 };
 
-describe("tokenMananger", () => {
+describe("TokenMananger", () => {
   describe("Fake", handler(new TokenManagerFake()));
   describe("Real", handler(new TokenManager()));
 });

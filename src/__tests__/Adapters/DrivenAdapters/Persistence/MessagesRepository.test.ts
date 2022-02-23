@@ -1,10 +1,10 @@
 import { expect } from "chai";
 
-import type { IMessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import type { IMessagesGateway } from "../../../../Ports/DrivenPorts/Persistence/Persistence.interface";
 import { Message } from "../../../../Domain/Message/Message";
-import { messagesRepository as fakeMessagesRepository } from "../../../__fakes__/dependencies/persistence/messagesRepository";
+import { messagesGateway as fakeMessagesGateway } from "../../../__fakes__/dependencies/Persistence/messagesGateway";
 
-const handler = (messagesRepository: IMessagesRepository) => () => {
+const handler = (messagesGateway: IMessagesGateway) => () => {
   const senderId = "senderId";
   const receiverId = "receiverId";
 
@@ -19,8 +19,8 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
   describe("Adding a message", () => {
     it("should add a message", async () => {
       const message = getNewMessage();
-      await messagesRepository.add(message);
-      const messagesList = await messagesRepository.getMessages({
+      await messagesGateway.add(message);
+      const messagesList = await messagesGateway.getMessages({
         between: message.receiverId,
         and: message.senderId,
       });
@@ -34,11 +34,11 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
   describe("Getting Messages", () => {
     before(async () => {
       for (let i = 1; i <= 20; i++)
-        await messagesRepository.add(getNewMessage(i.toString()));
+        await messagesGateway.add(getNewMessage(i.toString()));
     });
 
     it("should get the latest 20 messages (by default)", async () => {
-      const messagesList = await messagesRepository.getMessages({
+      const messagesList = await messagesGateway.getMessages({
         between: senderId,
         and: receiverId,
       });
@@ -50,7 +50,7 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
     });
 
     it("should be able to change the max number of messages returned", async () => {
-      const messagesList = await messagesRepository.getMessages({
+      const messagesList = await messagesGateway.getMessages({
         between: senderId,
         and: receiverId,
         numOfMessagesPerChunk: 10,
@@ -63,7 +63,7 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
     });
 
     it("should be able to change the messages chunk number", async () => {
-      const messagesList = await messagesRepository.getMessages({
+      const messagesList = await messagesGateway.getMessages({
         between: senderId,
         and: receiverId,
         numOfMessagesPerChunk: 10,
@@ -86,11 +86,11 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
           senderId,
           receiverId: receiversIds[index],
         };
-        await messagesRepository.add(new Message(args));
+        await messagesGateway.add(new Message(args));
       });
 
       sendersIds.forEach(async (senderId, index) => {
-        const messagesList = await messagesRepository.getMessages({
+        const messagesList = await messagesGateway.getMessages({
           between: senderId,
           and: receiversIds[index],
         });
@@ -107,7 +107,7 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
 
       for (let i = 0; i < randomUsersIds.length; i++) {
         for (let j = 0; j < 3; j++) {
-          await messagesRepository.add(
+          await messagesGateway.add(
             new Message({
               content: j.toString(),
               receiverId: randomUsersIds[i],
@@ -116,7 +116,7 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
           );
         }
       }
-      const messagesList = await messagesRepository.getLastMessageWithEveryUser(
+      const messagesList = await messagesGateway.getLastMessageWithEveryUser(
         authUserId
       );
 
@@ -141,6 +141,6 @@ const handler = (messagesRepository: IMessagesRepository) => () => {
   });
 };
 
-describe("messagesRepository", () => {
-  describe("Fake", handler(fakeMessagesRepository));
+describe("messagesGateway", () => {
+  describe("Fake", handler(fakeMessagesGateway));
 });

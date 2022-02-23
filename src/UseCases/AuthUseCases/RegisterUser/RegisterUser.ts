@@ -1,7 +1,7 @@
 import type { Args, Dependencies } from "./RegsiterUser.types";
 
 import { EmailAlreadyUsed } from "../_utils_/Exceptions";
-import { User } from "../../../Domain/User/User";
+import { User } from "../../../Domain/User";
 
 const makeRegisterUser = ({
   usersRepository,

@@ -3,21 +3,21 @@ import type { INotificationsManager } from "../../Ports/DrivenPorts/Notification
 import type { IPasswordManager } from "../../Ports/DrivenPorts/PasswordManager/PasswordManager.interface";
 import type { ITokenManager } from "../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 import type {
-  IConfirmationCodesRepository,
-  IMessagesRepository,
-  IUsersRepository,
-} from "../../Ports/DrivenPorts/persistence/persistence.interface";
+  IConfirmationCodesGateway,
+  IMessagesGateway,
+  IUsersGateway,
+} from "../../Ports/DrivenPorts/Persistence/Persistence.interface";
 
-export interface WithUsersRepository {
-  usersRepository: IUsersRepository;
+export interface WithUsersGateway {
+  usersGateway: IUsersGateway;
 }
 
-export interface WithConfirmationCodesRepository {
-  confirmationCodesRepository: IConfirmationCodesRepository;
+export interface WithConfirmationCodesGateway {
+  confirmationCodesGateway: IConfirmationCodesGateway;
 }
 
-export interface WithMessagesRepository {
-  messagesRepository: IMessagesRepository;
+export interface WithMessagesGateway {
+  messagesGateway: IMessagesGateway;
 }
 
 export interface WithPasswordManager {

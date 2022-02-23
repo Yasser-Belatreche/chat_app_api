@@ -3,9 +3,9 @@ import { makeMessage } from "../../Domain/Message/Message.Factory";
 
 import { getFakeDependencies } from "../__fakes__/dependencies";
 
-const { idGenerator } = getFakeDependencies();
+const { IdGeneratorFake } = getFakeDependencies();
 
-const Message = makeMessage({ idGenerator });
+const Message = makeMessage({ idGenerator: new IdGeneratorFake() });
 
 describe("Message Entity", () => {
   const validMessage = {

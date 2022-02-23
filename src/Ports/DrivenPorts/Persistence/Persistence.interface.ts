@@ -1,8 +1,8 @@
 import type { IConfirmationCode } from "../../../Domain/ConfirmationCode/ConfirmationCode.Factory";
 import type { IMessage } from "../../../Domain/Message/Message.Factory";
-import type { IUser } from "../../../Domain/User/User.Factory";
+import type { IUser } from "../../../Domain/User/User.types";
 
-export interface IUsersRepository {
+export interface IUsersGateway {
   add(user: IUser): Promise<IUser>;
   getById(userId: string): Promise<IUser | undefined>;
   getByEmail(email: string): Promise<IUser | undefined>;
@@ -10,7 +10,7 @@ export interface IUsersRepository {
   searchFor(keyword: string): Promise<IUser[]>;
 }
 
-export interface IConfirmationCodesRepository {
+export interface IConfirmationCodesGateway {
   add(confirmationCode: IConfirmationCode): Promise<IConfirmationCode>;
   find(email: string): Promise<IConfirmationCode | undefined>;
   delete(email: string): Promise<IConfirmationCode | undefined>;
@@ -33,7 +33,7 @@ interface GetMessagesArgs {
   numOfChunk?: number;
 }
 
-export interface IMessagesRepository {
+export interface IMessagesGateway {
   add(message: IMessage): Promise<IMessage>;
   getMessages(args: GetMessagesArgs): Promise<IMessage[]>;
   getLastMessageWithEveryUser(userId: string): Promise<IMessage[]>;

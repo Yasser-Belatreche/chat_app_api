@@ -1,6 +1,6 @@
 import type { Args, Dependencies } from "./Login.types";
 
-import { User } from "../../../Domain/User/User";
+import { User } from "../../../Domain/User";
 import { InvalidCredentials } from "../_utils_/Exceptions";
 
 const makeLogin = ({

@@ -1,4 +1,4 @@
-import type { IUser } from "../../Domain/User/User.Factory";
+import type { IUser } from "../../Domain/User/User.types";
 import { expect } from "chai";
 
 import { makeSendMessage } from "../../UseCases/MessagesUseCases/SendMessage/SendMessage";

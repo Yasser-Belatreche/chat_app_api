@@ -1,9 +1,9 @@
 import { IMessage } from "../../../../Domain/Message/Message.Factory";
-import { IMessagesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import { IMessagesGateway } from "../../../../Ports/DrivenPorts/Persistence/Persistence.interface";
 
 const repository = new Map<string, IMessage>();
 
-const messagesRepository: IMessagesRepository = {
+const messagesRepository: IMessagesGateway = {
   add: (message) => {
     repository.set(message.messageId, message);
     return new Promise((resolve) => {

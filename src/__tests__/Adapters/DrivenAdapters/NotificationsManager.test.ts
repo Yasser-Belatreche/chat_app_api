@@ -1,3 +1,3 @@
-describe("notificationsManager", () => {
+describe("NotificationsManager", () => {
   describe.skip("Real", () => {});
 });

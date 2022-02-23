@@ -2,25 +2,25 @@ import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import { ConfirmationCode } from "../../../../Domain/ConfirmationCode/ConfirmationCode";
-import type { IConfirmationCodesRepository } from "../../../../Ports/DrivenPorts/persistence/persistence.interface";
+import type { IConfirmationCodesGateway } from "../../../../Ports/DrivenPorts/Persistence/Persistence.interface";
 
 import { getFakeData } from "../../../__fakes__/data";
-import { confirmationCodesRepository as fakeConfirmationCodesRepository } from "../../../__fakes__/dependencies/persistence/confirmationCodesRepository";
+import { confirmationCodesGateway as fakeConfirmationCodesGateway } from "../../../__fakes__/dependencies/Persistence/ConfirmationCodesGateway";
 
 chai.use(chaiAsPromised);
 
 const fakeData = getFakeData();
 
-const handler = (confirmationCodesRepository: IConfirmationCodesRepository) => {
+const handler = (confirmationCodesGateway: IConfirmationCodesGateway) => {
   return () => {
     it("should save a confirmationCode", async () => {
       const { user } = fakeData;
 
       const confirmationCode = new ConfirmationCode(user.email);
 
-      await confirmationCodesRepository.add(confirmationCode);
+      await confirmationCodesGateway.add(confirmationCode);
       await expect(
-        confirmationCodesRepository.find(confirmationCode.email)
+        confirmationCodesGateway.find(confirmationCode.email)
       ).to.eventually.equal(confirmationCode);
     });
 
@@ -28,13 +28,13 @@ const handler = (confirmationCodesRepository: IConfirmationCodesRepository) => {
       const { user } = fakeData;
 
       const confirmationCode = new ConfirmationCode(user.email);
-      await confirmationCodesRepository.add(confirmationCode);
+      await confirmationCodesGateway.add(confirmationCode);
 
       const updatedCode = new ConfirmationCode(user.email);
-      await confirmationCodesRepository.update(updatedCode);
+      await confirmationCodesGateway.update(updatedCode);
 
       await expect(
-        confirmationCodesRepository.find(confirmationCode.email)
+        confirmationCodesGateway.find(confirmationCode.email)
       ).to.eventually.equal(updatedCode);
     });
 
@@ -42,18 +42,18 @@ const handler = (confirmationCodesRepository: IConfirmationCodesRepository) => {
       const { user } = fakeData;
 
       const confirmationCode = new ConfirmationCode(user.email);
-      await confirmationCodesRepository.add(confirmationCode);
+      await confirmationCodesGateway.add(confirmationCode);
 
       await expect(
-        confirmationCodesRepository.delete(confirmationCode.email)
+        confirmationCodesGateway.delete(confirmationCode.email)
       ).to.eventually.have.property("email", confirmationCode.email);
 
-      await expect(confirmationCodesRepository.find(confirmationCode.email)).to
+      await expect(confirmationCodesGateway.find(confirmationCode.email)).to
         .eventually.be.undefined;
     });
   };
 };
 
-describe("ConfirmationCodesRepository", () => {
-  describe("Fake", handler(fakeConfirmationCodesRepository));
+describe("ConfirmationCodesGateway", () => {
+  describe("Fake", handler(fakeConfirmationCodesGateway));
 });

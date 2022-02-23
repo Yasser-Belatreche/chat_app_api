@@ -1,5 +1,5 @@
 import { IMessage } from "../../../Domain/Message/Message.Factory";
-import { IUser } from "../../../Domain/User/User.Factory";
+import { IUser } from "../../../Domain/User/User.types";
 
 interface NewMessageArgs {
   message: ReturnType<IMessage["messageInfo"]>;

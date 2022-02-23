@@ -16,7 +16,7 @@ const handler = (idGenerator: IIdGenerator) => () => {
   });
 };
 
-describe("idGenerator", () => {
+describe("IdGenerator", () => {
   describe("Fake", handler(new IdGeneratorFake()));
   describe("Real", handler(new IdGenerator()));
 });

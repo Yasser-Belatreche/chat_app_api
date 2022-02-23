@@ -6,65 +6,87 @@ const ERRORS = {
   NAME_NOT_SET: "the name is not sets yet for this instance",
   CREATED_AT_NOT_SET: "the created at is not sets yet for this instance",
   IS_CONFIRMED_NOT_SET: "the isConfirmed is not sets yet for this instance",
-  USER_ID_OR_CREATED_AT_ALREADY_SET:
-    "the userId or createdAt is already sets for this instance",
   USER_ID_ALREADY_SET: "the userId is already sets for this instance",
+  IS_CONFIRMED_ALREADY_SET: "isConfirmed is already sets for this instance",
+  CREATED_At_ALREADY_SET: "createdAt is already sets for this instance",
+  INVALID_DATE: "should pass a valid date",
 };
 
-class InvalidEmail extends Error {
+class InvalidEmailException extends Error {
   constructor() {
     super(ERRORS.INVALID_EMAIL);
   }
 }
 
-class InvalidPassword extends Error {
+class InvalidPasswordException extends Error {
   constructor() {
     super(ERRORS.INVALID_PASSWORD);
   }
 }
 
-class UserIdNotSet extends Error {
+class UserIdNotSetException extends Error {
   constructor() {
     super(ERRORS.USER_ID_NOT_SET);
   }
 }
 
-class NameNotSet extends Error {
+class NameNotSetException extends Error {
   constructor() {
     super(ERRORS.NAME_NOT_SET);
   }
 }
 
-class CreatedAtNotSet extends Error {
+class CreatedAtNotSetException extends Error {
   constructor() {
     super(ERRORS.CREATED_AT_NOT_SET);
   }
 }
-class isConfirmedNotSet extends Error {
+class IsConfirmedNotSetException extends Error {
   constructor() {
     super(ERRORS.IS_CONFIRMED_NOT_SET);
   }
 }
 
-class UserIdOrCreatedAtAlreadySet extends Error {
-  constructor() {
-    super(ERRORS.USER_ID_OR_CREATED_AT_ALREADY_SET);
-  }
-}
-
-class NameNotValid extends Error {
+class NameNotValidException extends Error {
   constructor() {
     super(ERRORS.SHORT_USER_NAME);
   }
 }
 
+class UserIdAlreadySetException extends Error {
+  constructor() {
+    super(ERRORS.USER_ID_ALREADY_SET);
+  }
+}
+
+class IsConfirmedAlreadySetException extends Error {
+  constructor() {
+    super(ERRORS.IS_CONFIRMED_ALREADY_SET);
+  }
+}
+
+class CreatedAtAlreadySetException extends Error {
+  constructor() {
+    super(ERRORS.CREATED_At_ALREADY_SET);
+  }
+}
+
+class InvalidDateException extends Error {
+  constructor() {
+    super(ERRORS.INVALID_DATE);
+  }
+}
+
 export {
-  InvalidEmail,
-  InvalidPassword,
-  UserIdNotSet,
-  CreatedAtNotSet,
-  NameNotSet,
-  UserIdOrCreatedAtAlreadySet,
-  NameNotValid,
-  isConfirmedNotSet,
+  InvalidEmailException,
+  InvalidPasswordException,
+  UserIdNotSetException,
+  CreatedAtNotSetException,
+  NameNotSetException,
+  NameNotValidException,
+  IsConfirmedNotSetException,
+  UserIdAlreadySetException,
+  IsConfirmedAlreadySetException,
+  CreatedAtAlreadySetException,
+  InvalidDateException,
 };

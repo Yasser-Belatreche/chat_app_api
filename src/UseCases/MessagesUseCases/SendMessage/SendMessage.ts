@@ -1,5 +1,5 @@
 import type { Args, Dependencies } from "./SendMessage.types";
-import type { IUser } from "../../../Domain/User/User.Factory";
+import type { IUser } from "../../../Domain/User/User.types";
 import type { IMessage } from "../../../Domain/Message/Message.Factory";
 
 import { Message } from "../../../Domain/Message/Message";
