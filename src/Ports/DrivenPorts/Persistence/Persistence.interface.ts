@@ -1,5 +1,5 @@
-import type { IConfirmationCode } from "../../../Domain/ConfirmationCode/ConfirmationCode.Factory";
-import type { IMessage } from "../../../Domain/Message/Message.Factory";
+import type { IConfirmationCode } from "../../../Domain/ConfirmationCode/ConfirmationCode.types";
+import type { IMessage } from "../../../Domain/Message/Message.types";
 import type { IUser } from "../../../Domain/User/User.types";
 
 export interface IUsersGateway {

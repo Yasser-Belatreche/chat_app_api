@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import type { IPasswordManager } from "../../../Ports/DrivenPorts/PasswordManager/PasswordManager.interface";
 
-import { PasswordManagerFake } from "../../__fakes__/dependencies/PasswordManager";
+import { PasswordManagerFake } from "../../__fakes__/dependencies/PasswordManagerFake";
 import { PasswordManager } from "../../../Adapters/DrivenAdapters/PasswordManger";
 
 const handler = (passwordManager: IPasswordManager) => () => {

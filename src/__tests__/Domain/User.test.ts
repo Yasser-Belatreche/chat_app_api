@@ -6,12 +6,12 @@ import { getFakeData } from "../__fakes__/data";
 
 describe("User Entitiy", () => {
   const { IdGeneratorFake } = getFakeDependencies();
-  const { user } = getFakeData();
+  const { userFakeInfo } = getFakeData();
 
   const User = makeUser({ idGenerator: new IdGeneratorFake() });
   const validEmailAndPassword = {
-    email: user.email,
-    password: user.password,
+    email: userFakeInfo.email,
+    password: userFakeInfo.password,
   };
 
   it("should not have a user with unvalid email", () => {

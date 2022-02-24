@@ -1,11 +1,11 @@
-import { EmailServiceFake } from "./EmailService";
-import { IdGeneratorFake } from "./IdGenerator";
-import { notificationsManager } from "./NotificationsManager";
-import { PasswordManagerFake } from "./PasswordManager";
-import { ConfirmationCodesGatewayFake } from "./Persistence/ConfirmationCodesGateway";
-import { messagesRepository } from "./Persistence/messagesRepository";
-import { UsersGatewayFake } from "./Persistence/UsersGateway";
-import { TokenManagerFake } from "./TokenMananger";
+import { EmailServiceFake } from "./EmailServiceFake";
+import { IdGeneratorFake } from "./IdGeneratorFake";
+import { notificationsManager } from "./NotificationsManagerFake";
+import { PasswordManagerFake } from "./PasswordManagerFake";
+import { ConfirmationCodesGatewayFake } from "./Persistence/ConfirmationCodesGatewayFake";
+import { MessagesGatewayFake } from "./Persistence/MessagesGatewayFake";
+import { UsersGatewayFake } from "./Persistence/UsersGatewayFake";
+import { TokenManagerFake } from "./TokenManagerFake";
 
 const getFakeDependencies = () => ({
   IdGeneratorFake,
@@ -14,7 +14,7 @@ const getFakeDependencies = () => ({
   TokenManagerFake,
   confirmationCodesRepository: new ConfirmationCodesGatewayFake(),
   EmailServiceFake,
-  messagesRepository,
+  messagesRepository: new MessagesGatewayFake(),
   notificationsManager,
 });
 

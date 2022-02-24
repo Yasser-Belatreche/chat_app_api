@@ -15,7 +15,8 @@ class EmailService implements IEmailService {
   constructor() {
     const email = process.env.ADMIN_EMAIL_ADRESS;
     const password = process.env.ADMIN_EMAIL_PASSWORD;
-    if (!email || !password) throw this.NoEmailOrPasswordException();
+
+    if (!email || !password) this.NoEmailOrPasswordException();
 
     this.EMAIL_ADRESS = email;
     this.EMAIL_PASSWORD = password;
@@ -42,8 +43,8 @@ class EmailService implements IEmailService {
     });
   }
 
-  private NoEmailOrPasswordException() {
-    return new Error(
+  private NoEmailOrPasswordException(): never {
+    throw new Error(
       "should have the ADMIN_EMAIL_ADRESS, and ADMIN_EMAIL_PASSWORD is the env variables"
     );
   }

@@ -11,10 +11,13 @@ describe("UsersPersistenceFacade", () => {
   describe("Postgres", () => {
     const usersPersistence = new UsersPersistencePostgresFacade();
     const fakeData = getFakeData();
-    let userInfo: typeof fakeData.user;
+    let userInfo: typeof fakeData.userFakeInfo;
 
-    beforeEach(async () => {
-      userInfo = fakeData.user;
+    beforeEach(() => {
+      userInfo = fakeData.userFakeInfo;
+    });
+
+    afterEach(async () => {
       await usersPersistence.deleteAll();
     });
 
@@ -43,7 +46,7 @@ describe("UsersPersistenceFacade", () => {
     it("should not have two users with the same id", async () => {
       await usersPersistence.add(userInfo);
 
-      const { userId, ...rest } = fakeData.user;
+      const { userId, ...rest } = fakeData.userFakeInfo;
       await expect(usersPersistence.add({ userId: userInfo.userId, ...rest }))
         .to.be.rejected;
     });
@@ -51,14 +54,14 @@ describe("UsersPersistenceFacade", () => {
     it("should not have two users with the same email", async () => {
       await usersPersistence.add(userInfo);
 
-      const { email, ...rest } = fakeData.user;
+      const { email, ...rest } = fakeData.userFakeInfo;
       await expect(usersPersistence.add({ email: userInfo.email, ...rest })).to
         .be.rejected;
     });
 
     it("should be able to update the user information", async () => {
       await usersPersistence.add(userInfo);
-      const { userId, email, ...rest } = fakeData.user;
+      const { userId, email, ...rest } = fakeData.userFakeInfo;
 
       await usersPersistence.update({ ...userInfo, ...rest });
 
@@ -75,7 +78,10 @@ describe("UsersPersistenceFacade", () => {
       expect(searchResult.length).to.equal(1);
       expect(searchResult[0]).to.deep.equal(userInfo);
 
-      const anotherUser = { ...fakeData.user, name: `${userInfo.name}Smith` };
+      const anotherUser = {
+        ...fakeData.userFakeInfo,
+        name: `${userInfo.name}Smith`,
+      };
       await usersPersistence.add(anotherUser);
       const secondSearchResult = await usersPersistence.searchFor(keyword);
 
@@ -93,7 +99,10 @@ describe("UsersPersistenceFacade", () => {
       expect(searchResult.length).to.equal(1);
       expect(searchResult[0]).to.deep.equal(userInfo);
 
-      const anotherUser = { ...fakeData.user, email: `${userInfo.email}.io` };
+      const anotherUser = {
+        ...fakeData.userFakeInfo,
+        email: `${userInfo.email}.io`,
+      };
       await usersPersistence.add(anotherUser);
       const secondSearchResult = await usersPersistence.searchFor(keyword);
 

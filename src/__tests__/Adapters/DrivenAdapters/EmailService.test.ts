@@ -8,6 +8,9 @@ import { EmailService } from "../../../Adapters/DrivenAdapters/EmailService";
 describe("EmailService", () => {
   describe("Real", () => {
     it("should not be able to create an instance, without having the ADMIN_EMAIL_ADRESS, and ADMIN_EMAIL_PASSWORD in the env variables", () => {
+      delete process.env.ADMIN_EMAIL_ADRESS;
+      delete process.env.ADMIN_EMAIL_PASSWORD;
+
       expect(() => new EmailService()).to.throw();
     });
 

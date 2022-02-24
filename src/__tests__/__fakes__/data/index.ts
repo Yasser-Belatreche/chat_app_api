@@ -1,8 +1,13 @@
-import { getUser } from "./user";
+import { getMessageFakeInfo } from "./messageFakeInfo";
+import { getUserFakeInfo } from "./userFakeInfo";
 
 const getFakeData = () => ({
-  get user() {
-    return getUser();
+  get userFakeInfo() {
+    return getUserFakeInfo();
+  },
+
+  get messageFakeInfo() {
+    return getMessageFakeInfo();
   },
 });
 

@@ -1,46 +1,63 @@
 import { expect } from "chai";
-import { makeMessage } from "../../Domain/Message/Message.Factory";
 
+import { makeMessage } from "../../Domain/Message/MessageFactory";
+
+import { getFakeData } from "../__fakes__/data";
 import { getFakeDependencies } from "../__fakes__/dependencies";
 
-const { IdGeneratorFake } = getFakeDependencies();
-
-const Message = makeMessage({ idGenerator: new IdGeneratorFake() });
-
 describe("Message Entity", () => {
-  const validMessage = {
-    receiverId: "someValidId",
-    senderId: "anotherValidId",
-    content: "hello my friend !!",
-  };
+  const { IdGeneratorFake } = getFakeDependencies();
+  const Message = makeMessage({ idGenerator: new IdGeneratorFake() });
+
+  const fakeData = getFakeData();
+  const validMessageArgs = fakeData.messageFakeInfo;
 
   it("should not be able to have a message with an empty content", () => {
-    expect(() => new Message({ ...validMessage, content: "" })).to.throw();
+    expect(() => new Message({ ...validMessageArgs, content: "" })).to.throw();
   });
 
   it("should not have a message without a senderId or a receiverId", () => {
     expect(
-      () => new Message({ ...validMessage, receiverId: "", senderId: "" })
+      () => new Message({ ...validMessageArgs, receiverId: "", senderId: "" })
     ).to.throw();
   });
 
-  it("should generate a random id for the message, and initialize it with default values", () => {
-    const message = new Message(validMessage);
+  it("should not be able to change the properties after being set one time", () => {
+    const message = new Message(validMessageArgs);
+    message.messageId = fakeData.messageFakeInfo.messageId;
+    message.seen = false;
+    message.createdAt = new Date().toJSON();
+
+    expect(() => (message.seen = true)).to.throw();
+    expect(() => (message.createdAt = new Date().toJSON())).to.throw();
+    expect(() => (message.messageId = "someId")).to.throw();
+  });
+
+  it("should not be able to set the date to an invalid date", () => {
+    const message = new Message(validMessageArgs);
+    expect(() => (message.createdAt = "someText")).to.throw();
+  });
+
+  it("should generate a random id for the message, and initialize it with default values when calling createdNow()", () => {
+    const message = new Message(validMessageArgs);
+    message.createdNow();
 
     expect(message.messageId).to.be.a("string");
-    expect(message.receiverId).to.equal(validMessage.receiverId);
-    expect(message.senderId).to.equal(validMessage.senderId);
-    expect(message.content).to.equal(validMessage.content.trim());
+    expect(message.receiverId).to.equal(validMessageArgs.receiverId);
+    expect(message.senderId).to.equal(validMessageArgs.senderId);
+    expect(message.content).to.equal(validMessageArgs.content.trim());
     expect(message.seen).to.be.false;
     expect(message.createdAt).to.be.a("string");
-    expect(() => new Date(message.createdAt)).to.not.throw();
 
-    const antherMessage = new Message(validMessage);
-    expect(antherMessage.messageId).to.not.equal(message.messageId);
+    const anotherMessage = new Message(validMessageArgs);
+    anotherMessage.createdNow();
+
+    expect(anotherMessage.messageId).to.not.equal(message.messageId);
   });
 
   it("should be able to retrieve the message information", () => {
-    const message = new Message(validMessage);
+    const message = new Message(validMessageArgs);
+    message.createdNow();
 
     const messageInfo = message.messageInfo();
 

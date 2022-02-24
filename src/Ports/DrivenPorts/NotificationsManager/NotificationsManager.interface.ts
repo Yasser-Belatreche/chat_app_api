@@ -1,4 +1,4 @@
-import { IMessage } from "../../../Domain/Message/Message.Factory";
+import { IMessage } from "../../../Domain/Message/Message.types";
 import { IUser } from "../../../Domain/User/User.types";
 
 interface NewMessageArgs {

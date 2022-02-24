@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 import type { IIdGenerator } from "../../../Ports/DrivenPorts/IdGenerator/IdGenerator.interface";
 
-import { IdGeneratorFake } from "../../__fakes__/dependencies/IdGenerator";
+import { IdGeneratorFake } from "../../__fakes__/dependencies/IdGeneratorFake";
 import { IdGenerator } from "../../../Adapters/DrivenAdapters/IdGenerator";
 
 const handler = (idGenerator: IIdGenerator) => () => {

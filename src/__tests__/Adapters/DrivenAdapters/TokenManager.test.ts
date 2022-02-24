@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import type { ITokenManager } from "../../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 
-import { TokenManagerFake } from "../../__fakes__/dependencies/TokenMananger";
+import { TokenManagerFake } from "../../__fakes__/dependencies/TokenManagerFake";
 import { TokenManager } from "../../../Adapters/DrivenAdapters/TokenManager";
 
 process.env.JWT_SECRET_KEY = "someSecretKey";
@@ -24,7 +24,7 @@ const handler = (tokenManager: ITokenManager) => () => {
   });
 
   it("should decode the token and return his value", () => {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 3; i++) {
       const value = Math.floor(Math.random() * 10 ** 5).toString();
       const token = tokenManager.generateToken(value);
 

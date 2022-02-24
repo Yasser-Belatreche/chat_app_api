@@ -1,5 +1,7 @@
-import { EventEmitter } from "stream";
+import { INotificationsManager } from "../../Ports/DrivenPorts/NotificationsManager/NotificationsManager.interface";
 
-class NotificationManager {
+class NotificationManager implements INotificationsManager {
   constructor() {}
 }
+
+export { NotificationManager };
