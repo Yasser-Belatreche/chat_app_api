@@ -75,14 +75,18 @@ describe("UsersGateway", () => {
   });
 
   it("should search for users, and return the target users", async () => {
-    const users = [getNewUser(), getNewUser(), getNewUser()];
+    const users = [
+      getNewUser().userInfo(),
+      getNewUser().userInfo(),
+      getNewUser().userInfo(),
+    ];
     usersPersistence.prototype.searchFor = () => users;
 
     const searchResult = await usersGateway.searchFor("exist");
 
     expect(searchResult.length).to.equal(3);
     searchResult.map((user, index) => {
-      expect(user.userInfo()).to.deep.equal(users[index].userInfo());
+      expect(user.userInfo()).to.deep.equal(users[index]);
     });
   });
 });
