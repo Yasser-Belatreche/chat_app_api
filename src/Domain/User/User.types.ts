@@ -4,12 +4,12 @@ import { NonFunctionProperties } from "../_utils_/Type";
 export type Dependencies = WithIdGenerator;
 
 export interface IUser {
-  email: string;
-  password: string;
   userId: string;
   name: string;
-  createdAt: string;
+  email: string;
+  password: string;
   isConfirmed: boolean;
+  createdAt: string;
   userInfo(): NonFunctionProperties<IUser>;
   newRegistered(name: string): void;
   confirm(): void;

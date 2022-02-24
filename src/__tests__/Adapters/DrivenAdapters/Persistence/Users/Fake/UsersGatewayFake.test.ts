@@ -15,7 +15,7 @@ describe("UsersGatewayFake", () => {
     const { email, password, name } = fakeData.user;
 
     const user = new User({ email, password });
-    user.isANewRegistred(name);
+    user.newRegistered(name);
 
     return user;
   };

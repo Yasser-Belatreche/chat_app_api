@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "ConfirmationCode" ALTER COLUMN "createdAt" DROP DEFAULT,
+ALTER COLUMN "createdAt" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Message" ALTER COLUMN "createdAt" DROP DEFAULT,
+ALTER COLUMN "createdAt" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "createdAt" DROP DEFAULT,
+ALTER COLUMN "createdAt" SET DATA TYPE TEXT;
