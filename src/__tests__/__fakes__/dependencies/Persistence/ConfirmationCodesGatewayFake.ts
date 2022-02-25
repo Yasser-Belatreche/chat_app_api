@@ -9,9 +9,7 @@ class ConfirmationCodesGatewayFake implements IConfirmationCodesGateway {
     return Promise.resolve(confirmationCode);
   }
 
-  update(
-    confirmationCode: IConfirmationCode
-  ): Promise<IConfirmationCode | undefined> {
+  update(confirmationCode: IConfirmationCode): Promise<IConfirmationCode> {
     this.store.set(confirmationCode.email, confirmationCode);
     return Promise.resolve(confirmationCode);
   }
@@ -20,11 +18,11 @@ class ConfirmationCodesGatewayFake implements IConfirmationCodesGateway {
     return Promise.resolve(this.store.get(email));
   }
 
-  delete(email: string): Promise<IConfirmationCode | undefined> {
+  delete(email: string): Promise<IConfirmationCode> {
     const codeToDelete = this.store.get(email);
     this.store.delete(email);
 
-    return Promise.resolve(codeToDelete);
+    return Promise.resolve(codeToDelete as any);
   }
 
   deleteAll() {

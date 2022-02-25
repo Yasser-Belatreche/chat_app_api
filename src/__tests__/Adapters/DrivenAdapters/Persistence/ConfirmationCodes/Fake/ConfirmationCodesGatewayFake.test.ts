@@ -9,7 +9,7 @@ import { ConfirmationCodesGatewayFake } from "../../../../../__fakes__/dependenc
 
 chai.use(chaiAsPromised);
 
-describe("ConfirmationCodesGateway", () => {
+describe("ConfirmationCodesGatewayFake", () => {
   const confirmationCodesGateway = new ConfirmationCodesGatewayFake();
   const fakeData = getFakeData();
 

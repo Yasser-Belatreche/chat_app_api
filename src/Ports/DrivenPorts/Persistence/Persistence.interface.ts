@@ -13,10 +13,8 @@ export interface IUsersGateway {
 export interface IConfirmationCodesGateway {
   add(confirmationCode: IConfirmationCode): Promise<IConfirmationCode>;
   find(email: string): Promise<IConfirmationCode | undefined>;
-  delete(email: string): Promise<IConfirmationCode | undefined>;
-  update(
-    confirmationCode: IConfirmationCode
-  ): Promise<IConfirmationCode | undefined>;
+  delete(email: string): Promise<IConfirmationCode>;
+  update(confirmationCode: IConfirmationCode): Promise<IConfirmationCode>;
 }
 
 interface GetMessagesArgs {
