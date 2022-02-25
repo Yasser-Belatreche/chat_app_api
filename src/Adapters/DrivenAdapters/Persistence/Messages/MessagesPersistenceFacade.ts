@@ -18,31 +18,43 @@ class MessagesPresistencePostgresFacade implements IMessagesPersistenceFacade {
 
   async getMessages(args: GetMessagesArgs): Promise<MessageInfo[]> {
     try {
-      const { between: firstUserId, and: secondUserId } = args;
+      const { between: firstId, and: secondId } = args;
       const { numOfChunk = 1, numOfMessagesPerChunk = 20 } = args;
 
-      const messages = await prisma.message.findMany({
+      const skip = (numOfChunk - 1) * numOfMessagesPerChunk;
+
+      return await prisma.message.findMany({
+        orderBy: { createdAt: "desc" },
+        take: numOfMessagesPerChunk,
+        skip,
         where: {
           OR: [
-            {
-              senderId: firstUserId,
-              receiverId: secondUserId,
-            },
-            {
-              senderId: secondUserId,
-              receiverId: firstUserId,
-            },
+            { senderId: firstId, receiverId: secondId },
+            { senderId: secondId, receiverId: firstId },
           ],
         },
       });
-      return messages;
     } catch (error) {
       this.DBException(error);
     }
   }
 
   async getLastMessageWithEveryUser(userId: string): Promise<MessageInfo[]> {
-    return [];
+    try {
+      return await prisma.$queryRaw<MessageInfo[]>`
+        SELECT * FROM (
+          SELECT *, row_number() OVER (
+            PARTITION BY LEAST("senderId", "receiverId"), GREATEST("senderId", "receiverId")
+            ORDER BY "createdAt" DESC
+          ) AS rn
+          FROM "Message"
+          WHERE ${userId} IN ("senderId", "receiverId")
+        ) AS t
+        WHERE rn = 1 ORDER BY "createdAt" DESC
+      `;
+    } catch (error) {
+      this.DBException(error);
+    }
   }
 
   async deleteAll() {
