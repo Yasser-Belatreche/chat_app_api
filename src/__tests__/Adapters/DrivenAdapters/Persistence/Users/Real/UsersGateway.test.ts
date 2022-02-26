@@ -1,13 +1,10 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 
 import type { IUser } from "../../../../../../Domain/User/User.types";
 import { User } from "../../../../../../Domain/User";
 import { getFakeData } from "../../../../../__fakes__/data";
 
 import { UsersGateway } from "../../../../../../Adapters/DrivenAdapters/Persistence/Users/UsersGateway";
-
-chai.use(chaiAsPromised);
 
 describe("UsersGateway", () => {
   const fakeData = getFakeData();

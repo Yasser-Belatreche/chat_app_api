@@ -1,6 +1,6 @@
-import { makeConfirmUser } from "../../../UseCases/AuthService/ConfirmUser/ConfirmUser";
-import { makeRegisterUser } from "../../../UseCases/AuthService/RegisterUser/RegisterUser";
-import { makeSendConfirmationCode } from "../../../UseCases/AuthService/SendConfirmationCode/SendConfirmationCode";
+import { makeConfirmUser } from "../../../UseCases/AuthService/ConfirmUser/ConfirmUserFactory";
+import { makeRegisterUser } from "../../../UseCases/AuthService/RegisterUser/RegisterUserFactory";
+import { makeSendConfirmationCode } from "../../../UseCases/AuthService/SendConfirmationCode/SendConfirmationCodeFactory";
 
 import { getFakeData } from "../../__fakes__/data";
 import { getFakeDependencies } from "../../__fakes__/dependencies";

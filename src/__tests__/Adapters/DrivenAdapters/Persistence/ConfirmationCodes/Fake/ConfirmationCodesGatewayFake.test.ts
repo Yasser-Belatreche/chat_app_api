@@ -1,13 +1,10 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 
 import type { IConfirmationCode } from "../../../../../../Domain/ConfirmationCode/ConfirmationCode.types";
 import { ConfirmationCode } from "../../../../../../Domain/ConfirmationCode";
 
 import { getFakeData } from "../../../../../__fakes__/data";
 import { ConfirmationCodesGatewayFake } from "../../../../../__fakes__/dependencies/Persistence/ConfirmationCodesGatewayFake";
-
-chai.use(chaiAsPromised);
 
 describe("ConfirmationCodesGatewayFake", () => {
   const confirmationCodesGateway = new ConfirmationCodesGatewayFake();

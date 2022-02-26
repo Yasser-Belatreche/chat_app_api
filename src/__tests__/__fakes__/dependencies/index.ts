@@ -9,12 +9,12 @@ import { TokenManagerFake } from "./TokenManagerFake";
 
 const getFakeDependencies = () => ({
   idGenerator: new IdGeneratorFake(),
-  usersRepository: new UsersGatewayFake(),
+  usersGateway: new UsersGatewayFake(),
   passwordManager: new PasswordManagerFake(),
   tokenManager: new TokenManagerFake(),
-  confirmationCodesRepository: new ConfirmationCodesGatewayFake(),
+  confirmationCodesGateway: new ConfirmationCodesGatewayFake(),
   emailService: new EmailServiceFake(),
-  messagesRepository: new MessagesGatewayFake(),
+  messagesGateway: new MessagesGatewayFake(),
   notificationsManager: new NotificationsManagerFake(),
 });
 

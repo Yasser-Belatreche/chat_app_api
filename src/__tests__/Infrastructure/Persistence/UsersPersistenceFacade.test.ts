@@ -1,11 +1,8 @@
-import chai, { expect } from "chai";
-import chaiAsPromised from "chai-as-promised";
+import { expect } from "chai";
 
 import { UsersPersistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
 import { getFakeData } from "../../__fakes__/data";
-
-chai.use(chaiAsPromised);
 
 describe("UsersPersistenceFacade", () => {
   describe("Postgres", () => {
