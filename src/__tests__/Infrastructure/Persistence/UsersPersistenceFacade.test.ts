@@ -1,9 +1,9 @@
 import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
-import { UsersPersistencePostgresFacade } from "../../../../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
+import { UsersPersistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
-import { getFakeData } from "../../../../../__fakes__/data";
+import { getFakeData } from "../../__fakes__/data";
 
 chai.use(chaiAsPromised);
 

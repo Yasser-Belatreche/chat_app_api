@@ -5,10 +5,10 @@ import { getFakeDependencies } from "../__fakes__/dependencies";
 import { getFakeData } from "../__fakes__/data";
 
 describe("User Entitiy", () => {
-  const { IdGeneratorFake } = getFakeDependencies();
+  const { idGenerator } = getFakeDependencies();
   const { userFakeInfo } = getFakeData();
 
-  const User = makeUser({ idGenerator: new IdGeneratorFake() });
+  const User = makeUser({ idGenerator });
   const validEmailAndPassword = {
     email: userFakeInfo.email,
     password: userFakeInfo.password,

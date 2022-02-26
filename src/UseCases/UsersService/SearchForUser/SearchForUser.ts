@@ -1,20 +1,48 @@
-import type { Args, Dependencies } from "./SearchForUser.types";
+import type { ITokenManager } from "../../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
+import type { IUsersGateway } from "../../../Ports/DrivenPorts/Persistence/Persistence.interface";
 
-import { UserNotConfirmed } from "../../_utils_/Exceptions";
+import { IUser } from "../../../Domain/User/User.types";
 
-const makeSearchForUser = ({ tokenManager, usersRepository }: Dependencies) => {
-  return async ({ authToken, searchKeyword }: Args) => {
-    const authUserId = tokenManager.decode(authToken);
+import type { SearchArgs } from "./SearchForUser.types";
 
-    const authUser = await usersRepository.getById(authUserId);
-    if (!authUser?.isConfirmed) throw new UserNotConfirmed();
+class SearchForUsersFactory {
+  constructor(
+    private readonly tokenManager: ITokenManager,
+    private readonly usersGateway: IUsersGateway
+  ) {}
+
+  async search({ authToken, searchKeyword }: SearchArgs) {
+    const authUserId = this.decodeToken(authToken);
+
+    const authUser = await this.getUserById(authUserId);
+    if (!authUser?.isConfirmed) this.UserNotConfirmedException();
 
     searchKeyword = searchKeyword.trim().toLowerCase();
-    const result = await usersRepository.searchFor(searchKeyword);
-    const confirmedUsers = result.filter((user) => user.isConfirmed);
+    const result = await this.searchForUsers(searchKeyword);
+    const confirmedUsers = this.getConfirmedUsersFrom(result);
 
     return confirmedUsers.map((user) => user.userInfo());
-  };
-};
+  }
 
-export { makeSearchForUser };
+  private decodeToken(token: string): string {
+    return this.tokenManager.decode(token);
+  }
+
+  private async getUserById(id: string) {
+    return await this.usersGateway.getById(id);
+  }
+
+  private async searchForUsers(keyword: string) {
+    return await this.usersGateway.searchFor(keyword);
+  }
+
+  private getConfirmedUsersFrom(users: IUser[]) {
+    return users.filter((user) => user.isConfirmed);
+  }
+
+  private UserNotConfirmedException() {
+    throw new Error("Cannot perform this action: User not confirmed");
+  }
+}
+
+export { SearchForUsersFactory };

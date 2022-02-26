@@ -1,11 +1,4 @@
-import type {
-  WithTokenManager,
-  WithUsersRepository,
-} from "../../_utils_/Dependencies.interfaces";
-
-export type Dependencies = WithTokenManager & WithUsersRepository;
-
-export interface Args {
+export interface SearchArgs {
   authToken: string;
   searchKeyword: string;
 }

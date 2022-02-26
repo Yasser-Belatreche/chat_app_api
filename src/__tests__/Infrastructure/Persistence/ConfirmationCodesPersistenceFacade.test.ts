@@ -1,9 +1,9 @@
 import { expect } from "chai";
 
-import { ConfirmationCodesPersistencePostgresFacade } from "../../../../../../Adapters/DrivenAdapters/Persistence/ConfirmationCodes/ConfirmationCodesPersistenceFacade";
+import { ConfirmationCodesPersistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/ConfirmationCodes/ConfirmationCodesPersistenceFacade";
+import { UsersPersistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
-import { UsersPersistencePostgresFacade } from "../../../../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
-import { getFakeData } from "../../../../../__fakes__/data";
+import { getFakeData } from "../../__fakes__/data";
 
 describe("ConfirmationCodesPersistenceFacade", () => {
   describe("Postgres", () => {

@@ -6,8 +6,8 @@ import { getFakeData } from "../__fakes__/data";
 import { getFakeDependencies } from "../__fakes__/dependencies";
 
 describe("Message Entity", () => {
-  const { IdGeneratorFake } = getFakeDependencies();
-  const Message = makeMessage({ idGenerator: new IdGeneratorFake() });
+  const { idGenerator } = getFakeDependencies();
+  const Message = makeMessage({ idGenerator });
 
   const fakeData = getFakeData();
   const validMessageArgs = fakeData.messageFakeInfo;

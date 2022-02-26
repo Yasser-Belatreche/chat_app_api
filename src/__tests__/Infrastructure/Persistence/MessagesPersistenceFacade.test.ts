@@ -1,9 +1,9 @@
 import { expect } from "chai";
 
-import { MessagesPresistencePostgresFacade } from "../../../../../../Adapters/DrivenAdapters/Persistence/Messages/MessagesPersistenceFacade";
-import { UsersPersistencePostgresFacade } from "../../../../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
+import { MessagesPresistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/Messages/MessagesPersistenceFacade";
+import { UsersPersistencePostgresFacade } from "../../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
-import { getFakeData } from "../../../../../__fakes__/data";
+import { getFakeData } from "../../__fakes__/data";
 
 describe("MessagesPersistenceFacade", () => {
   describe("Postgres", () => {
