@@ -13,21 +13,19 @@ const handler = (passwordManager: IPasswordManager) => () => {
   });
 
   it("should check if the password match the hashed", async () => {
-    for (let i = 0; i < 3; i++) {
-      const password = `${Math.floor(Math.random()) * 10 ** 7}`;
-      const hash = await passwordManager.hash(password);
+    const password = `${Math.floor(Math.random()) * 10 ** 7}`;
+    const hash = await passwordManager.hash(password);
 
-      await expect(
-        passwordManager.isHashMatchLiteral({ literal: password, hash })
-      ).to.eventually.be.true;
+    await expect(
+      passwordManager.isHashMatchLiteral({ literal: password, hash })
+    ).to.eventually.be.true;
 
-      await expect(
-        passwordManager.isHashMatchLiteral({
-          literal: `wrong${password}`,
-          hash,
-        })
-      ).to.eventually.be.false;
-    }
+    await expect(
+      passwordManager.isHashMatchLiteral({
+        literal: `wrong${password}`,
+        hash,
+      })
+    ).to.eventually.be.false;
   });
 };
 

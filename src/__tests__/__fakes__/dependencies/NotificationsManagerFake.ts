@@ -1,9 +1,7 @@
 import { INotificationsManager } from "../../../Ports/DrivenPorts/NotificationsManager/NotificationsManager.interface";
 
-const notificationsManager: INotificationsManager = {
-  newMessage: async () => {
-    return new Promise((resolve) => setTimeout(resolve, 2));
-  },
-};
+class NotificationsManagerFake implements INotificationsManager {
+  newMessage(message: any): void {}
+}
 
-export { notificationsManager };
+export { NotificationsManagerFake };

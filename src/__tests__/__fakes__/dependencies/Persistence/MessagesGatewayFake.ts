@@ -37,6 +37,7 @@ class MessagesGatewayFake implements IMessagesGateway {
   }
 
   async getLastMessageWithEveryUser(userId: string): Promise<IMessage[]> {
+    // use stub
     return Promise.resolve([]);
   }
 

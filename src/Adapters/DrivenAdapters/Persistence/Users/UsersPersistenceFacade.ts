@@ -63,11 +63,7 @@ class UsersPersistencePostgresFacade implements IUserPersistenceFacade {
   }
 
   async deleteAll() {
-    try {
-      await prisma.user.deleteMany();
-    } catch (error) {
-      this.DBException(error);
-    }
+    await prisma.user.deleteMany();
   }
 
   private DBException(err: unknown): never {

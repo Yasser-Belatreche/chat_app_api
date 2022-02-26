@@ -73,10 +73,10 @@ describe("ConfirmationCodesPersistenceFacade", () => {
     it("should delete a code and return the deleted code", async () => {
       await confirmationCodesPersistence.add(fakeCodeInfo);
 
-      const codeInfo = await confirmationCodesPersistence.delete(
-        fakeCodeInfo.email
-      );
-      expect(codeInfo).to.deep.equal(fakeCodeInfo);
+      await expect(
+        confirmationCodesPersistence.delete(fakeCodeInfo.email)
+      ).to.eventually.deep.equal(fakeCodeInfo);
+
       await expect(confirmationCodesPersistence.find(fakeCodeInfo.email)).to
         .eventually.be.undefined;
     });

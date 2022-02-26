@@ -7,5 +7,5 @@ interface NewMessageArgs {
 }
 
 export interface INotificationsManager {
-  newMessage(message: NewMessageArgs): Promise<void>;
+  newMessage(message: NewMessageArgs): void;
 }

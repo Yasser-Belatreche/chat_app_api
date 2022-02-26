@@ -1,6 +1,6 @@
 import { EmailServiceFake } from "./EmailServiceFake";
 import { IdGeneratorFake } from "./IdGeneratorFake";
-import { notificationsManager } from "./NotificationsManagerFake";
+import { NotificationsManagerFake } from "./NotificationsManagerFake";
 import { PasswordManagerFake } from "./PasswordManagerFake";
 import { ConfirmationCodesGatewayFake } from "./Persistence/ConfirmationCodesGatewayFake";
 import { MessagesGatewayFake } from "./Persistence/MessagesGatewayFake";
@@ -8,14 +8,14 @@ import { UsersGatewayFake } from "./Persistence/UsersGatewayFake";
 import { TokenManagerFake } from "./TokenManagerFake";
 
 const getFakeDependencies = () => ({
-  IdGeneratorFake,
+  idGenerator: new IdGeneratorFake(),
   usersRepository: new UsersGatewayFake(),
-  PasswordManagerFake,
-  TokenManagerFake,
+  passwordManager: new PasswordManagerFake(),
+  tokenManager: new TokenManagerFake(),
   confirmationCodesRepository: new ConfirmationCodesGatewayFake(),
-  EmailServiceFake,
+  emailService: new EmailServiceFake(),
   messagesRepository: new MessagesGatewayFake(),
-  notificationsManager,
+  notificationsManager: new NotificationsManagerFake(),
 });
 
 export { getFakeDependencies };

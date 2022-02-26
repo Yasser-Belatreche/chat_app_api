@@ -33,7 +33,7 @@ const makeSendMessage = ({
 
     const newMessage = await messagesRepository.add(message);
 
-    await notificationsManager.newMessage({
+    notificationsManager.newMessage({
       message: newMessage.messageInfo(),
       sender: sender.userInfo(),
     });
