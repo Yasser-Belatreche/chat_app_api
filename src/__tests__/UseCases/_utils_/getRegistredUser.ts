@@ -1,54 +1,44 @@
-import { makeConfirmUser } from "../../../UseCases/AuthService/ConfirmUser/ConfirmUserFactory";
-import { makeRegisterUser } from "../../../UseCases/AuthService/RegisterUser/RegisterUserFactory";
-import { makeSendConfirmationCode } from "../../../UseCases/AuthService/SendConfirmationCode/SendConfirmationCodeFactory";
+import { AuthServiceFacade } from "../../../UseCases/AuthService/AuthServiceFacade";
 
 import { getFakeData } from "../../__fakes__/data";
-import { getFakeDependencies } from "../../__fakes__/dependencies";
+import { fakeDependencies } from "../../__fakes__/dependencies";
 
-const fakeData = getFakeData();
 const {
   passwordManager,
   tokenManager,
-  usersRepository,
-  confirmationCodesRepository,
+  usersGateway,
+  confirmationCodesGateway,
   emailService,
-} = getFakeDependencies();
+} = fakeDependencies;
+const fakeData = getFakeData();
 
-const registerUser = makeRegisterUser({
+const authService = new AuthServiceFacade(
+  usersGateway,
+  confirmationCodesGateway,
   passwordManager,
   tokenManager,
-  usersRepository,
-});
-const sendConfirmationCode = makeSendConfirmationCode({
-  usersRepository,
-  confirmationCodesRepository,
-  emailService,
-});
-const confirmUser = makeConfirmUser({
-  confirmationCodesRepository,
-  tokenManager,
-  usersRepository,
-});
+  emailService
+);
 
-const registerAndConfirmRandomUser = async () => {
-  const { token, user } = await registerRandomUser();
+const getConfirmedUser = async () => {
+  const { token, user } = await getNonConfirmedUser();
 
-  const code = await sendConfirmationCode({ email: user.email });
-  await confirmUser({ authToken: token, code });
+  const code = await authService.sendConfirmationCode(user.email);
+  await authService.confirmUser({ authToken: token, code });
 
   return { token, user };
 };
 
-const registerRandomUser = async () => {
-  const { user } = fakeData;
-  const email = user.email.toLowerCase();
+const getNonConfirmedUser = async () => {
+  const { userFakeInfo } = fakeData;
+  const email = userFakeInfo.email.toLowerCase();
 
-  const token = await registerUser(user);
+  const token = await authService.register(userFakeInfo);
 
-  const userInDb = await usersRepository.getByEmail(email);
-  if (!userInDb) throw "";
+  const registredUser = await usersGateway.getByEmail(email);
+  if (!registredUser) throw "";
 
-  return { token, user: userInDb };
+  return { token, user: registredUser.userInfo() };
 };
 
-export { registerAndConfirmRandomUser, registerRandomUser };
+export { getConfirmedUser, getNonConfirmedUser };

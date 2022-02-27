@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { getFakeData } from "../../__fakes__/data";
-import { getFakeDependencies } from "../../__fakes__/dependencies";
+import { fakeDependencies } from "../../__fakes__/dependencies";
 
 import { AuthServiceFacade } from "../../../UseCases/AuthService/AuthServiceFacade";
 
@@ -12,7 +12,7 @@ describe("AuthServiceFacade - Login & Registrations", () => {
     passwordManager,
     tokenManager,
     emailService,
-  } = getFakeDependencies();
+  } = fakeDependencies;
   const fakeData = getFakeData();
 
   const authService = new AuthServiceFacade(
@@ -27,6 +27,10 @@ describe("AuthServiceFacade - Login & Registrations", () => {
 
   beforeEach(() => {
     userInfo = fakeData.userFakeInfo;
+  });
+
+  afterEach(() => {
+    usersGateway.deleteAll();
   });
 
   it("should hash the password when registration and return a user Token", async () => {

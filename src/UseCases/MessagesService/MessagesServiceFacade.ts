@@ -1,4 +1,4 @@
-import {
+import type {
   IMessagesGateway,
   IUsersGateway,
 } from "../../Ports/DrivenPorts/Persistence/Persistence.interface";
@@ -12,14 +12,14 @@ import type { SendMessageArgs } from "./SendMessage/SendMessageFactory.types";
 import { GetMessagesFactory } from "./GetMessages/GetMessagesFactory";
 import { SendMessageFactory } from "./SendMessage/SendMessageFactory";
 
-import { IMessagesServiceFacade } from "./MessagesServiceFacade.types";
+import type { IMessagesServiceFacade } from "./MessagesServiceFacade.types";
 
 class MessagesServiceFacade implements IMessagesServiceFacade {
   constructor(
     private readonly tokenManager: ITokenManager,
     private readonly usersGateway: IUsersGateway,
     private readonly messagesGateway: IMessagesGateway,
-    private readonly notificationManger: INotificationsManager
+    private readonly notificationsManger: INotificationsManager
   ) {}
 
   async sendMessage(
@@ -29,7 +29,7 @@ class MessagesServiceFacade implements IMessagesServiceFacade {
       this.tokenManager,
       this.usersGateway,
       this.messagesGateway,
-      this.notificationManger
+      this.notificationsManger
     );
     return await sendMessageFactory.send(args);
   }

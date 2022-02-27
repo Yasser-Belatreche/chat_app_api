@@ -1,11 +1,12 @@
 import { expect } from "chai";
 
-import { makeUser } from "../../Domain/User/UserFactory";
-import { getFakeDependencies } from "../__fakes__/dependencies";
+import { fakeDependencies } from "../__fakes__/dependencies";
 import { getFakeData } from "../__fakes__/data";
 
+import { makeUser } from "../../Domain/User/UserFactory";
+
 describe("User Entitiy", () => {
-  const { idGenerator } = getFakeDependencies();
+  const { idGenerator } = fakeDependencies;
   const { userFakeInfo } = getFakeData();
 
   const User = makeUser({ idGenerator });

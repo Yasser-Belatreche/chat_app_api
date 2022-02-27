@@ -2,7 +2,7 @@ import Sinon from "sinon";
 import { expect } from "chai";
 
 import { getFakeData } from "../../__fakes__/data";
-import { getFakeDependencies } from "../../__fakes__/dependencies";
+import { fakeDependencies } from "../../__fakes__/dependencies";
 
 import { AuthServiceFacade } from "../../../UseCases/AuthService/AuthServiceFacade";
 
@@ -13,7 +13,7 @@ describe("AuthServiceFacade - User Confirmation", () => {
     passwordManager,
     tokenManager,
     emailService,
-  } = getFakeDependencies();
+  } = fakeDependencies;
   const fakeData = getFakeData();
   const sendEmailSpy = Sinon.spy(emailService, "send");
 
@@ -30,6 +30,10 @@ describe("AuthServiceFacade - User Confirmation", () => {
   beforeEach(() => {
     userInfo = fakeData.userFakeInfo;
     sendEmailSpy.resetHistory();
+  });
+
+  afterEach(() => {
+    usersGateway.deleteAll();
   });
 
   it("should not send a verification code to an email that doesn't exist", async () => {

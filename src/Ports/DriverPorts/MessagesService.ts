@@ -5,7 +5,7 @@ import {
 import { notificationManger } from "../DrivenPorts/NotificationsManager/NotificationsManager";
 import { tokenManager } from "../DrivenPorts/TokenManager/TokenManager";
 
-import { MessagesServiceFacade } from "../../UseCases/MessagesService/MessageServicesFacade";
+import { MessagesServiceFacade } from "../../UseCases/MessagesService/MessagesServiceFacade";
 
 const messagesService = new MessagesServiceFacade(
   tokenManager,

@@ -1,12 +1,12 @@
 import { expect } from "chai";
 
+import { getFakeData } from "../__fakes__/data";
+import { fakeDependencies } from "../__fakes__/dependencies";
+
 import { makeMessage } from "../../Domain/Message/MessageFactory";
 
-import { getFakeData } from "../__fakes__/data";
-import { getFakeDependencies } from "../__fakes__/dependencies";
-
 describe("Message Entity", () => {
-  const { idGenerator } = getFakeDependencies();
+  const { idGenerator } = fakeDependencies;
   const Message = makeMessage({ idGenerator });
 
   const fakeData = getFakeData();

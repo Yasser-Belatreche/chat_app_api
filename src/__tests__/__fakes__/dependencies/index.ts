@@ -7,7 +7,7 @@ import { MessagesGatewayFake } from "./Persistence/MessagesGatewayFake";
 import { UsersGatewayFake } from "./Persistence/UsersGatewayFake";
 import { TokenManagerFake } from "./TokenManagerFake";
 
-const getFakeDependencies = () => ({
+const fakeDependencies = {
   idGenerator: new IdGeneratorFake(),
   usersGateway: new UsersGatewayFake(),
   passwordManager: new PasswordManagerFake(),
@@ -16,6 +16,6 @@ const getFakeDependencies = () => ({
   emailService: new EmailServiceFake(),
   messagesGateway: new MessagesGatewayFake(),
   notificationsManager: new NotificationsManagerFake(),
-});
+};
 
-export { getFakeDependencies };
+export { fakeDependencies };
