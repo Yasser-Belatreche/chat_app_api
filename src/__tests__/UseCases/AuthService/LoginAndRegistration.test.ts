@@ -3,25 +3,13 @@ import { expect } from "chai";
 import { getFakeData } from "../../__fakes__/data";
 import { fakeDependencies } from "../../__fakes__/dependencies";
 
-import { AuthServiceFacade } from "../../../UseCases/AuthService/AuthServiceFacade";
+import { getAuthServiceWithFakeDependencies } from "./setup/getAuthServiceWithFakeDependencies";
 
 describe("AuthServiceFacade - Login & Registrations", () => {
-  const {
-    usersGateway,
-    confirmationCodesGateway,
-    passwordManager,
-    tokenManager,
-    emailService,
-  } = fakeDependencies;
+  const { usersGateway } = fakeDependencies;
   const fakeData = getFakeData();
 
-  const authService = new AuthServiceFacade(
-    usersGateway,
-    confirmationCodesGateway,
-    passwordManager,
-    tokenManager,
-    emailService
-  );
+  const authService = getAuthServiceWithFakeDependencies();
 
   let userInfo = fakeData.userFakeInfo;
 

@@ -1,8 +1,8 @@
-import {
+import type {
   IMessagesGateway,
   IUsersGateway,
 } from "../../../Ports/DrivenPorts/Persistence/Persistence.interface";
-import { ITokenManager } from "../../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
+import type { ITokenManager } from "../../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 
 import type { IUser } from "../../../Domain/User/User.types";
 import type { IMessage } from "../../../Domain/Message/Message.types";
@@ -17,7 +17,7 @@ class GetContactsListFactory {
   async getList(authToken: string) {
     const authUserId = this.decodeToken(authToken);
 
-    const user = await this.getUserById(authUserId);
+    const user = await this.findUserById(authUserId);
     if (!user) this.UserNotExistException();
 
     const messages = await this.getLastMessagesOf(user.userId);
@@ -36,7 +36,7 @@ class GetContactsListFactory {
     return this.tokenManager.decode(token);
   }
 
-  private async getUserById(id: string) {
+  private async findUserById(id: string) {
     return await this.usersGateway.getById(id);
   }
 
@@ -47,7 +47,7 @@ class GetContactsListFactory {
   private async getContacts(authUserId: string, messages: IMessage[]) {
     const contactsIds = this.getContactsIds(authUserId, messages);
 
-    return await Promise.all(contactsIds.map((id) => this.getUserById(id)));
+    return await Promise.all(contactsIds.map((id) => this.findUserById(id)));
   }
 
   private getContactsIds(authUserId: string, messages: IMessage[]) {

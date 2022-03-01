@@ -4,10 +4,10 @@ import type {
 } from "../../Ports/DrivenPorts/Persistence/Persistence.interface";
 import type { ITokenManager } from "../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 
-import type { SearchArgs } from "./SearchForUser/SearchForUser.types";
+import type { SearchArgs } from "./SearchForUsers/SearchForUsers.types";
 
 import { GetContactsListFactory } from "./GetContactsList/GetContactsListFactory";
-import { SearchForUsersFactory } from "./SearchForUser/SearchForUser";
+import { SearchForUsersFactory } from "./SearchForUsers/SearchForUsers";
 
 import type { IUsersServiceFacade } from "./UsersServiveFacade.types";
 

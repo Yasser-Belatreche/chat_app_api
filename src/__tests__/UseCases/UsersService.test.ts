@@ -1,82 +1,9 @@
-// import type { IUser } from "../../Domain/User/User.types";
-// import { expect } from "chai";
-
-// import { makeSendMessage } from "../../UseCases/MessagesService/SendMessage/SendMessageFactory";
-// import { makeGetContactsList } from "../../UseCases/UsersService/GetContactsList/GetContactsListFactory";
-// import { makeSearchForUser } from "../../UseCases/UsersService/SearchForUser/SearchForUser";
-
-// import { getFakeDependencies } from "../__fakes__/dependencies";
-// import {
-//   registerAndConfirmRandomUser,
-//   registerRandomUser,
-// } from "./_utils_/getRegistredUser";
-
-// const {
-//   tokenManager,
-//   usersRepository,
-//   messagesRepository,
-//   notificationsManager,
-// } = getFakeDependencies();
-// const searchForUser = makeSearchForUser({ tokenManager, usersRepository });
-// const sendMessage = makeSendMessage({
-//   messagesRepository,
-//   notificationsManager,
-//   tokenManager,
-//   usersRepository,
-// });
-// const getContactsList = makeGetContactsList({
-//   tokenManager,
-//   usersRepository,
-//   messagesRepository,
-// });
-
 // describe("UsersUseCases", () => {
 //   let authUser: any, randomUsers: { user: IUser; token: string }[];
 
 //   before(async () => {
 //     authUser = await registerAndConfirmRandomUser();
 //     randomUsers = await register4RandomUsers();
-//   });
-
-//   describe("Search For Users", () => {
-//     it("user with wrong authToken cannot perform a search", async () => {
-//       await expect(
-//         searchForUser({ authToken: "wrongToken", searchKeyword: "hel" })
-//       ).to.be.rejected;
-//     });
-
-//     it("not confirmed user cannot perform a search", async () => {
-//       const { token } = await registerRandomUser();
-
-//       await expect(searchForUser({ authToken: token, searchKeyword: "hel" })).to
-//         .be.rejected;
-//     });
-
-//     it("should found a user by name or email", async () => {
-//       const authToken = authUser.token;
-//       const target = randomUsers[0].user;
-
-//       let searchKeyword = target.name.slice(1, 4);
-//       let searchResult = await searchForUser({ authToken, searchKeyword });
-
-//       const isFound = searchResult.some(
-//         ({ userId }) => userId == target.userId
-//       );
-//       expect(isFound).to.be.true;
-//     });
-
-//     it("should not get not confirmed users in the search result", async () => {
-//       const authToken = authUser.token;
-//       const { user: target } = await registerRandomUser();
-
-//       let searchKeyword = target.name.slice(1, 4);
-//       let searchResult = await searchForUser({ authToken, searchKeyword });
-
-//       const isFound = searchResult.some(
-//         ({ userId }) => userId == target.userId
-//       );
-//       expect(isFound).be.false;
-//     });
 //   });
 
 //   describe("Getting Contacts List", () => {

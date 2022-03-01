@@ -1,9 +1,9 @@
 import type { ITokenManager } from "../../../Ports/DrivenPorts/TokenManager/TokenManager.interface";
 import type { IUsersGateway } from "../../../Ports/DrivenPorts/Persistence/Persistence.interface";
 
-import { IUser } from "../../../Domain/User/User.types";
+import type { IUser } from "../../../Domain/User/User.types";
 
-import type { SearchArgs } from "./SearchForUser.types";
+import type { SearchArgs } from "./SearchForUsers.types";
 
 class SearchForUsersFactory {
   constructor(
@@ -18,8 +18,8 @@ class SearchForUsersFactory {
     if (!authUser?.isConfirmed) this.UserNotConfirmedException();
 
     searchKeyword = searchKeyword.trim().toLowerCase();
-    const result = await this.searchForUsers(searchKeyword);
-    const confirmedUsers = this.getConfirmedUsersFrom(result);
+    const usersFromSearch = await this.searchForUsers(searchKeyword);
+    const confirmedUsers = this.getConfirmedUsersFrom(usersFromSearch);
 
     return confirmedUsers.map((user) => user.userInfo());
   }

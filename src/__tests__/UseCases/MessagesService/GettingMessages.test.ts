@@ -1,18 +1,13 @@
 import { expect } from "chai";
-import { IUser } from "../../../Domain/User/User.types";
-import { MessagesServiceFacade } from "../../../UseCases/MessagesService/MessagesServiceFacade";
+
 import { fakeDependencies } from "../../__fakes__/dependencies";
 import { getConfirmedUser } from "../_utils_/getRegistredUser";
 
+import { getMessagesServiceWithFakeDependencies } from "./setup/getMessagesServiceWithFakeDependencies";
+
 describe("MessagesService - Getting Messages", () => {
-  const { tokenManager, usersGateway, messagesGateway, notificationsManager } =
-    fakeDependencies;
-  const messagesService = new MessagesServiceFacade(
-    tokenManager,
-    usersGateway,
-    messagesGateway,
-    notificationsManager
-  );
+  const { usersGateway, messagesGateway } = fakeDependencies;
+  const messagesService = getMessagesServiceWithFakeDependencies();
 
   let gettingMessagesArgs: any;
 
@@ -25,13 +20,12 @@ describe("MessagesService - Getting Messages", () => {
     gettingMessagesArgs = { authToken, chatParticipantId };
   });
 
-  after(() => {
-    usersGateway.deleteAll();
+  afterEach(() => {
+    messagesGateway.deleteAll();
   });
 
-  it("should return an empty list when no message sent between the two users", async () => {
-    const messages = await messagesService.getMessages(gettingMessagesArgs);
-    expect(messages.length).to.equal(0);
+  after(() => {
+    usersGateway.deleteAll();
   });
 
   it("should not be able to get the messages of a user with a wrong token", async () => {
@@ -41,6 +35,11 @@ describe("MessagesService - Getting Messages", () => {
         authToken: "wrongToken",
       })
     ).to.be.rejected;
+  });
+
+  it("should return an empty list when no message sent between the two users", async () => {
+    const messages = await messagesService.getMessages(gettingMessagesArgs);
+    expect(messages.length).to.equal(0);
   });
 
   it("should get (by default) the latest 20 messages between the two target users, ordered by createdAt", async () => {

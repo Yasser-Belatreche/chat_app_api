@@ -22,19 +22,14 @@ class SendMessageFactory {
   async send({ authToken, receiverId, content }: SendMessageArgs) {
     const authUserId = this.decodeToken(authToken);
 
-    const sender = await this.getUserById(authUserId);
-    const receiver = await this.getUserById(receiverId);
+    const sender = await this.findUserById(authUserId);
+    const receiver = await this.findUserById(receiverId);
 
     if (!sender || !receiver) this.UserNotExistException();
     if (!this.isUsersConfirmed(sender, receiver))
       this.UserNotConfirmedException();
 
-    const message = new Message({
-      senderId: sender.userId,
-      receiverId: receiver.userId,
-      content,
-    });
-    message.createdNow();
+    const message = this.getNewMessage(sender, receiver, content);
 
     await this.saveMessage(message);
     this.sendNewMessageNotification(message, sender);
@@ -46,12 +41,23 @@ class SendMessageFactory {
     return this.tokenManager.decode(token);
   }
 
-  private async getUserById(id: string) {
+  private async findUserById(id: string) {
     return await this.usersGateway.getById(id);
   }
 
   private isUsersConfirmed(first: IUser, second: IUser) {
     return first.isConfirmed && second.isConfirmed;
+  }
+
+  private getNewMessage(sender: IUser, receiver: IUser, content: string) {
+    const message = new Message({
+      senderId: sender.userId,
+      receiverId: receiver.userId,
+      content,
+    });
+    message.createdNow();
+
+    return message;
   }
 
   private async saveMessage(message: IMessage) {
