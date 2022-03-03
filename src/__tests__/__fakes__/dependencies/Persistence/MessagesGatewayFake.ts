@@ -37,8 +37,34 @@ class MessagesGatewayFake implements IMessagesGateway {
   }
 
   async getLastMessageWithEveryUser(userId: string): Promise<IMessage[]> {
-    // use stub
-    return Promise.resolve([]);
+    let messages: IMessage[] = [];
+
+    this.store.forEach((message) => {
+      if (message.receiverId == userId || message.senderId == userId)
+        messages.push(message);
+    });
+
+    messages = messages.reduce((acc: IMessage[], message) => {
+      const senderId = message.senderId;
+      const receiverId = message.receiverId;
+      let found = false;
+
+      acc.forEach((uniqueMessage: any) => {
+        if (
+          (senderId == uniqueMessage.senderId ||
+            senderId == uniqueMessage.receiverId) &&
+          (receiverId == uniqueMessage.senderId ||
+            receiverId == uniqueMessage.receiverId)
+        ) {
+          found = true;
+        }
+      });
+      !found && acc.push(message);
+
+      return acc;
+    }, []);
+
+    return messages;
   }
 
   deleteAll() {

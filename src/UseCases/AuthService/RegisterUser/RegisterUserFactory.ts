@@ -18,7 +18,7 @@ class RegisterUserFactory {
     const user = new User({ email: args.email, password: args.password });
 
     const existingUser = await this.getUserByEmail(user.email);
-    if (existingUser) this.EmailAlreadyUsed();
+    if (existingUser) this.EmailAlreadyUsedException();
 
     user.newRegistered(args.name);
     user.password = await this.hashPassword(user.password);
@@ -45,7 +45,7 @@ class RegisterUserFactory {
     return this.tokenManager.generateToken(id);
   }
 
-  private EmailAlreadyUsed(): never {
+  private EmailAlreadyUsedException(): never {
     throw new Error("Email already used");
   }
 }

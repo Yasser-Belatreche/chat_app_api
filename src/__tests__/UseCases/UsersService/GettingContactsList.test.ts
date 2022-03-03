@@ -1,30 +1,21 @@
 import { expect } from "chai";
+
 import { fakeDependencies } from "../../__fakes__/dependencies";
 import { getConfirmedUser } from "../_utils_/getRegistredUser";
 
 import { getMessagesServiceWithFakeDependencies } from "../MessagesService/setup/getMessagesServiceWithFakeDependencies";
 import { getUsersServiceWithFakeDepencies } from "./setup/getUsersServiceWithFakeDependencies";
-import Sinon from "sinon";
-import { getFakeData } from "../../__fakes__/data";
 
 describe("UsersService - Getting Contacts List", () => {
-  const fakeData = getFakeData();
   const { usersGateway, messagesGateway } = fakeDependencies;
-
-  // const getLastMessagesStub = Sinon.stub(
-  //   messagesGateway,
-  //   "getLastMessageWithEveryUser"
-  // );
 
   const usersService = getUsersServiceWithFakeDepencies();
   const messagesService = getMessagesServiceWithFakeDependencies();
 
   let authUser: any;
-  let fakeMessageInfo: typeof fakeData.messageFakeInfo;
 
   before(async () => {
     authUser = await getConfirmedUser();
-    fakeMessageInfo = fakeData.messageFakeInfo;
   });
 
   afterEach(() => {
@@ -47,8 +38,6 @@ describe("UsersService - Getting Contacts List", () => {
 
   it("when the user send some messages to 1 user, should get a list of length 1", async () => {
     const receiver = await getConfirmedUser();
-
-    // getLastMessagesStub.resolves([fakeMessageInfo as any]);
 
     for (let i = 0; i < 3; i++) {
       await messagesService.sendMessage({
