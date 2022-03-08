@@ -12,6 +12,7 @@
     "test:contract": "mocha -r ts-node/register 'src/__tests__/Adapters/**/*.test.ts'",
     "test:infrastructure": "mocha -r ts-node/register --timeout 5000 'src/__tests__/Infrastructure/**/*.test.ts'",
     "test:acceptance": "mocha -r ts-node/register 'src/__tests__/UseCases/**/*.test.ts'",
+    "test:e2e": "mocha -r ts-node/register 'src/__tests__/e2e/**/*.test.ts'",
     "test": "npm run test:macro && npm run test:contract && npm run test:infrastructure && npm run test:acceptance"
   },
   "repository": {
