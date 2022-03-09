@@ -9,15 +9,17 @@
  */
 
 import chai, { expect } from "chai";
-import chaiHttp from "chai-http";
+import _ from "chai-http";
 import Sinon from "sinon";
 
 import { EmailService } from "../../Adapters/DrivenAdapters/EmailService";
+import { ConfirmationCodesPersistencePostgresFacade } from "../../Adapters/DrivenAdapters/Persistence/ConfirmationCodes/ConfirmationCodesPersistenceFacade";
+import { UsersPersistencePostgresFacade } from "../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
 import { startExpressServer } from "../../Adapters/DriverAdapters/REST/express";
-import { getFakeData } from "../__fakes__/data";
+import { confirmationCodesGateway } from "../../Ports/DrivenPorts/Persistence/Persistence";
 
-chai.use(chaiHttp);
+import { getFakeData } from "../__fakes__/data";
 
 describe("Authentication e2e", () => {
   const server = startExpressServer();
@@ -28,14 +30,17 @@ describe("Authentication e2e", () => {
 
   after(() => {
     server.close();
+
+    new UsersPersistencePostgresFacade().deleteAll();
+    new ConfirmationCodesPersistencePostgresFacade().deleteAll();
   });
 
-  it("user register", () => {
+  it("user register", (done) => {
     const sendEmailStub = Sinon.stub(EmailService.prototype, "send");
 
     chai
       .request(server)
-      .post("/auth/register")
+      .post("/api/auth/register")
       .send(userFakeInfo)
       .end((err, res) => {
         if (err) console.log(err);
@@ -44,6 +49,58 @@ describe("Authentication e2e", () => {
         expect(sendEmailStub.calledOnce).to.be.true;
 
         userToken = res.body.data;
+        done();
+      });
+  });
+
+  it("user confirm himself", (done) => {
+    const email = userFakeInfo.email.toLowerCase();
+    confirmationCodesGateway.find(email).then((code) => {
+      chai
+        .request(server)
+        .put("/api/auth/confirmUser")
+        .send({ code: code?.code })
+        .set("authorization", userToken)
+        .end((err, res) => {
+          if (err) console.log(err);
+          expect(res.body).to.have.property("success", true);
+          expect(res.body)
+            .to.have.property("data")
+            .to.have.property("isConfirmed", true);
+
+          done();
+        });
+    });
+  });
+
+  it("user login", (done) => {
+    chai
+      .request(server)
+      .post("/api/auth/login")
+      .send(userFakeInfo)
+      .end((err, res) => {
+        if (err) console.log(err);
+        expect(res.body).to.have.property("success", true);
+        expect(res.body)
+          .to.have.property("data")
+          .to.contains("Bearer ")
+          .and.equal(userToken);
+
+        done();
+      });
+  });
+
+  it("the new user get an empty contacts list at first", (done) => {
+    chai
+      .request(server)
+      .get("/api/users/contacts")
+      .set("authorization", userToken)
+      .end((err, res) => {
+        if (err) console.log(err);
+        expect(res.body).to.have.property("success", true);
+        expect(res.body).to.have.property("data").to.have.lengthOf(0);
+
+        done();
       });
   });
 });

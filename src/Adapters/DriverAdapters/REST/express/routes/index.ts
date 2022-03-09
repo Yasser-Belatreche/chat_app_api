@@ -1,5 +1,11 @@
 import { Router } from "express";
 
-const globalRoutes: Router = Router();
+import { authRoutes } from "./AuthRoutes";
+import { usersRoutes } from "./UsersRoutes";
 
-export { globalRoutes };
+const allRoutes: Router = Router();
+
+allRoutes.use("/auth", authRoutes);
+allRoutes.use("/users", usersRoutes);
+
+export { allRoutes };

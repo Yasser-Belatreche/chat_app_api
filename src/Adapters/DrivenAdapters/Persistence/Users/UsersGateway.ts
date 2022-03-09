@@ -28,7 +28,7 @@ class UsersGateway implements IUsersGateway {
   }
 
   async update(user: IUser): Promise<IUser> {
-    const newUserInfo = await this.userPersistence.update(user);
+    const newUserInfo = await this.userPersistence.update(user.userInfo());
 
     return this.getUserEntity(newUserInfo);
   }

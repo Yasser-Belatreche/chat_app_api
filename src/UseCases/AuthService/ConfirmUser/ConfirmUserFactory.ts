@@ -30,7 +30,9 @@ class ConfirmUserFactory {
     user.confirm();
     const updatedUser = await this.updateUser(user);
 
-    return updatedUser.userInfo();
+    const { password, ...upadatedInfo } = updatedUser.userInfo();
+
+    return upadatedInfo;
   }
 
   private decodeToken(token: string) {

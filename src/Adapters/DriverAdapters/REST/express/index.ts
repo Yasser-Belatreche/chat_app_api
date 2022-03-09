@@ -3,7 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import env from "dotenv";
 
-import { globalRoutes } from "./routes";
+import { allRoutes } from "./routes";
 
 const startExpressServer = () => {
   const app: Express = express();
@@ -16,7 +16,7 @@ const startExpressServer = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
 
-  app.use("/api", globalRoutes);
+  app.use("/api", allRoutes);
 
   const PORT: number | string = process.env.PORT || 5000;
 

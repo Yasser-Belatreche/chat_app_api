@@ -57,7 +57,7 @@ describe("UsersGateway", () => {
   });
 
   it("should update the user and return the updated entity", async () => {
-    usersPersistence.prototype.update = () => user;
+    usersPersistence.prototype.update = () => user.userInfo();
 
     const updatedUser = await usersGateway.update(user);
     expect(updatedUser.userInfo()).to.deep.equal(updatedUser.userInfo());
