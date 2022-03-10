@@ -8,7 +8,6 @@ import { authService } from "../../../../../Ports/DriverPorts/AuthService";
 const register: ControllerFunction = async ({ body }) => {
   try {
     const { name, email, password } = body;
-
     const token = await authService.register({ email, name, password });
 
     return {
@@ -17,14 +16,15 @@ const register: ControllerFunction = async ({ body }) => {
       data: token,
     };
   } catch (error: any) {
-    const response = {
+    const response: any = {
       success: false,
       status: STATUS_CODES.SERVER_ERROR,
-      error,
+      error: "server error",
     };
 
-    if (error.message.includes("email")) {
-      response.error = [{ email: "email already used" }];
+    if (error.message.includes("Email")) {
+      response.status = STATUS_CODES.BAD_REQUEST;
+      response.error = { email: "email already used" };
     }
 
     return response;

@@ -21,27 +21,32 @@ import { confirmationCodesGateway } from "../../Ports/DrivenPorts/Persistence/Pe
 
 import { getFakeData } from "../__fakes__/data";
 
-describe("Authentication e2e", () => {
+describe("Authentication", () => {
   const server = startExpressServer();
   const fakeData = getFakeData();
 
-  const { userFakeInfo } = fakeData;
+  const sendEmailStub = Sinon.stub(EmailService.prototype, "send");
+
+  const { userFakeInfo: user } = fakeData;
   let userToken: string;
+
+  beforeEach(() => {
+    sendEmailStub.resetHistory();
+  });
 
   after(() => {
     server.close();
+    sendEmailStub.restore();
 
     new UsersPersistencePostgresFacade().deleteAll();
     new ConfirmationCodesPersistencePostgresFacade().deleteAll();
   });
 
   it("user register", (done) => {
-    const sendEmailStub = Sinon.stub(EmailService.prototype, "send");
-
     chai
       .request(server)
       .post("/api/auth/register")
-      .send(userFakeInfo)
+      .send(user)
       .end((err, res) => {
         if (err) console.log(err);
         expect(res.body).to.have.property("success", true);
@@ -53,8 +58,23 @@ describe("Authentication e2e", () => {
       });
   });
 
+  it("user cannot register again with same email", (done) => {
+    chai
+      .request(server)
+      .post("/api/auth/register")
+      .send(user)
+      .end((err, res) => {
+        if (err) console.log(err);
+        expect(res).to.have.status(400);
+        expect(res.body).to.have.property("success", false);
+        expect(sendEmailStub.notCalled).to.be.true;
+
+        done();
+      });
+  });
+
   it("user confirm himself", (done) => {
-    const email = userFakeInfo.email.toLowerCase();
+    const email = user.email.toLowerCase();
     confirmationCodesGateway.find(email).then((code) => {
       chai
         .request(server)
@@ -73,11 +93,25 @@ describe("Authentication e2e", () => {
     });
   });
 
-  it("user login", (done) => {
+  it("user cannot login with wrong password", (done) => {
     chai
       .request(server)
       .post("/api/auth/login")
-      .send(userFakeInfo)
+      .send({ ...user, password: "wrongPassword" })
+      .end((err, res) => {
+        if (err) console.log(err);
+        expect(res).to.have.status(400);
+        expect(res.body).to.have.property("success", false);
+
+        done();
+      });
+  });
+
+  it("user login with valid password", (done) => {
+    chai
+      .request(server)
+      .post("/api/auth/login")
+      .send(user)
       .end((err, res) => {
         if (err) console.log(err);
         expect(res.body).to.have.property("success", true);

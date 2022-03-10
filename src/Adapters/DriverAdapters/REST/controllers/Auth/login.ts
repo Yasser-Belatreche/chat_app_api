@@ -15,12 +15,19 @@ const login: ControllerFunction = async ({ body }) => {
       success: true,
       data: token,
     };
-  } catch (error) {
-    return {
-      status: STATUS_CODES.SERVER_ERROR,
+  } catch (error: any) {
+    const response: any = {
       success: false,
-      error,
+      status: STATUS_CODES.SERVER_ERROR,
+      error: "server error",
     };
+
+    if (error.message.includes("Credentials")) {
+      response.status = STATUS_CODES.BAD_REQUEST;
+      response.error = { credentials: "wrong credentials" };
+    }
+
+    return response;
   }
 };
 
