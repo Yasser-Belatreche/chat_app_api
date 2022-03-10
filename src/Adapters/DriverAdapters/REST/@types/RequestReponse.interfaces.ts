@@ -1,5 +1,6 @@
 interface HttpRequest {
   body: any;
+  queryParams: any;
   headers: {
     authorization?: string;
   };

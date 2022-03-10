@@ -1,13 +1,3 @@
-/**
- * 1 - user register
- * 2 - user confirm himself
- * 3 - user login
- * 4 - user get an empty contacts list
- * 5 - user search for a contact
- * 6 - user send a message to that person
- * 7 - user get contacts list again, and found that person in his contacts list, and the last message is the message he send
- */
-
 import chai, { expect } from "chai";
 import _ from "chai-http";
 import Sinon from "sinon";
@@ -16,28 +6,28 @@ import { EmailService } from "../../Adapters/DrivenAdapters/EmailService";
 import { ConfirmationCodesPersistencePostgresFacade } from "../../Adapters/DrivenAdapters/Persistence/ConfirmationCodes/ConfirmationCodesPersistenceFacade";
 import { UsersPersistencePostgresFacade } from "../../Adapters/DrivenAdapters/Persistence/Users/UsersPersistenceFacade";
 
-import { startExpressServer } from "../../Adapters/DriverAdapters/REST/express";
 import { confirmationCodesGateway } from "../../Ports/DrivenPorts/Persistence/Persistence";
+import { server } from "./setup/server";
 
 import { getFakeData } from "../__fakes__/data";
 
 describe("Authentication", () => {
-  const server = startExpressServer();
   const fakeData = getFakeData();
 
-  const sendEmailStub = Sinon.stub(EmailService.prototype, "send");
+  let sendEmailStub: Sinon.SinonStub;
 
   const { userFakeInfo: user } = fakeData;
   let userToken: string;
 
   beforeEach(() => {
-    sendEmailStub.resetHistory();
+    sendEmailStub = Sinon.stub(EmailService.prototype, "send");
+  });
+
+  afterEach(() => {
+    sendEmailStub.restore();
   });
 
   after(() => {
-    server.close();
-    sendEmailStub.restore();
-
     new UsersPersistencePostgresFacade().deleteAll();
     new ConfirmationCodesPersistencePostgresFacade().deleteAll();
   });
@@ -73,7 +63,24 @@ describe("Authentication", () => {
       });
   });
 
-  it("user confirm himself", (done) => {
+  it("user cannot confirm his email with wrong confirmation code", (done) => {
+    chai
+      .request(server)
+      .put("/api/auth/confirmUser")
+      .send({ code: "wrong" })
+      .set("authorization", userToken)
+      .end((err, res) => {
+        if (err) console.log(err);
+
+        expect(res).to.have.status(400);
+        expect(res.body).to.have.property("success", false);
+        expect(res.body).to.have.property("error").to.have.property("code");
+
+        done();
+      });
+  });
+
+  it("user confirm his email with correct code", (done) => {
     const email = user.email.toLowerCase();
     confirmationCodesGateway.find(email).then((code) => {
       chai

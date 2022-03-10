@@ -24,11 +24,18 @@ const confirmUser: ControllerFunction = async ({ body, headers }) => {
       data: user,
     };
   } catch (error: any) {
-    return {
+    const response: any = {
       success: false,
-      status: STATUS_CODES.BAD_REQUEST,
-      error,
+      status: STATUS_CODES.SERVER_ERROR,
+      error: "server error",
     };
+
+    if (error.message.includes("Code")) {
+      response.status = STATUS_CODES.BAD_REQUEST;
+      response.error = { code: "wrong code" };
+    }
+
+    return response;
   }
 };
 

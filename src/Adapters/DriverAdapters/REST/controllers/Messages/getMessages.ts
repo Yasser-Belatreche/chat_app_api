@@ -1,13 +1,13 @@
+import { messagesService } from "../../../../../Ports/DriverPorts/MessagesService";
 import {
   ControllerFunction,
   STATUS_CODES,
 } from "../../@types/RequestReponse.interfaces";
 
-import { usersService } from "../../../../../Ports/DriverPorts/UsersService";
-
-const getContactsList: ControllerFunction = async ({ headers }) => {
+const getMessages: ControllerFunction = async ({ headers, queryParams }) => {
   try {
     const { authorization: authToken } = headers;
+
     if (!authToken)
       return {
         success: false,
@@ -15,12 +15,20 @@ const getContactsList: ControllerFunction = async ({ headers }) => {
         error: "no token in the headers",
       };
 
-    const contacts = await usersService.getContacts(authToken);
+    const { chatParticipantId, numOfChunk, numOfMessagesPerChunk } =
+      queryParams;
+
+    const messages = await messagesService.getMessages({
+      authToken,
+      chatParticipantId,
+      numOfChunk,
+      numOfMessagesPerChunk,
+    });
 
     return {
       success: true,
       status: STATUS_CODES.SUCCESS,
-      data: contacts,
+      data: messages,
     };
   } catch (error) {
     return {
@@ -31,4 +39,4 @@ const getContactsList: ControllerFunction = async ({ headers }) => {
   }
 };
 
-export { getContactsList };
+export { getMessages };
