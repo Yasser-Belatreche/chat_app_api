@@ -6,7 +6,7 @@ export interface NewMessageArgs {
   sender: ReturnType<IUser["userInfo"]>;
 }
 
-type NotificationsArgs = {
+export type NotificationsArgs = {
   NEW_MESSAGE: NewMessageArgs;
   SEEN: ReturnType<IMessage["messageInfo"]>;
 };

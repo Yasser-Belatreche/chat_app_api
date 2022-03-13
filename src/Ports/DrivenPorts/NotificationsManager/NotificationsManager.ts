@@ -1,11 +1,10 @@
 import type { INotificationsManager } from "./NotificationsManager.interface";
-import { NotificationManager } from "../../../Adapters/DrivenAdapters/NotificationsManager/NotificationsManager";
 
-// change it later
-import { EventEmitter } from "stream";
+import { NotificationManager } from "../../../Adapters/DrivenAdapters/NotificationsManager/NotificationsManager";
+import { notificationsEmitter } from "../../../Adapters/DrivenAdapters/NotificationsManager/NotificationsEmitter";
 
 const notificationManger: INotificationsManager = new NotificationManager(
-  new EventEmitter()
+  notificationsEmitter
 );
 
 export { notificationManger };
